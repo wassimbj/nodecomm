@@ -1,0 +1,83 @@
+@layout('layouts.front')
+
+@section('content')
+  <!--================Home Banner Area =================-->
+        <section class="banner_area">
+            <div class="banner_inner d-flex align-items-center">
+                <div class="container">
+                    <div class="banner_content text-center">
+                        <h2> Shipping & Billing </h2>
+                        <div class="page_link">
+                            <a href="/user/cart">Cart</a>
+                            <a href="/user/shipping" class='text-danger'>Shipping</a>
+                            <a href="/user/checkout">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <div class="bg0 pt-5 pb-5">
+        <div class="container">
+            @include('layouts.flash-msg')
+            <form action="/user/shipping" method="POST">
+                <div class="mt-10">
+                    <input type="text" placeholder="Full name" required class="single-input-accent" value='{{user.firstname+' '+user.lastname}}' disabled>
+                </div>
+
+                <div class="mt-10">
+                    <input type="email" placeholder="Email" required class="single-input-accent" value='{{user.email}}' disabled>
+                </div>
+                <!-- <div class="input-group-icon mt-10">
+                    <div class="icon"><i class="fa fa-thumb-tack"></i></div>
+                    <input type="text" name="address" placeholder="Address" required="" class="single-input">
+                </div> -->
+                
+                <div class="input-group-icon mt-10">
+                    <div class="icon"><i class="fa fa-globe" aria-hidden="true"></i></div>
+                     <div class="form-select" id="default-select2">
+                        <select class='single-input-accent' name="country">
+                            <option value=''>Country</option>
+                            <option value="America">America (USA) </option>
+                            <option value="England">England (UK) </option>
+                            <option value="UAE">UAE</option>
+                            <option value="Tunisia">Tunisia</option>
+                        </select>
+                        <script>
+                            document.querySelector('select[name="country"] option[value="{{ship.country}}"]').setAttribute('selected', true);
+                        </script>
+                     </div>
+                </div>
+
+                <div class='row'>
+                    <div class="col-lg-6">
+                        <div class="mt-10">
+                        <input type="text" placeholder="City" name='city' class="single-input-accent" value="{{ship.city || ''}}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mt-10">
+                            <input type="text" placeholder="State" name='state' class="single-input-accent" value="{{ship.state || ''}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <input type="text" placeholder="Address" name='address' class="single-input-accent" value="{{ship.address || ''}}">
+                </div>
+                <div class="mt-10">
+                    <input type="text" placeholder="Zip code" name='zip' class="single-input-accent" value="{{ship.zip || ''}}">
+                </div>
+
+                
+                <div class="mt-10">
+                    <textarea class="single-textarea single-input-accent" placeholder="Do you have any thing you wanna say ?" name='message'>{{ship.message || ''}}</textarea>
+                </div>
+                <button type="submit" class="genric-btn info circle arrow w-100 d-block mt-4">
+                    {{ ship._id == '' ? 'Next' : 'Save changes' }}
+                    <span class="lnr lnr-arrow-right"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+@endsection

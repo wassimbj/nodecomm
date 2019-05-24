@@ -1,0 +1,102 @@
+@layout('layouts.back')
+
+    @section('css')
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css">
+    @endsection
+
+@section('admin')
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">
+                Create a product
+            </h3>
+        </div>
+        @include('layouts.flash-msg')
+         <div class="card">
+            <div class="card-body">
+                <form class="forms-sample" method='POST' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Product images </label>
+                        <input type="file" name="img" class="file-upload-default" multiple>
+                        <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" disabled="" placeholder="Click upload and select your images">
+                            <span class="input-group-append">
+                                <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Product name </label>
+                        <input type="text" class="form-control" name='name' placeholder="e.g: watch">
+                    </div>
+                
+                     <div class="form-group">
+                         <label class='font-weight-bold'> Product price </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-primary text-white">$</span>
+                            </div>
+                            <input type="number" name="price" class="form-control" placeholder="e.g: 50.99">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                         <label class='font-weight-bold'> Product Quantity </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-primary text-white">Qty</span>
+                            </div>
+                            <input type="number" class="form-control" name='qty' placeholder="e.g: 100">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Category </label>
+                        <input type="text" class="form-control" name='category' placeholder="e.g: Men">
+                    </div>
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Brand </label>
+                        <input type="text" class="form-control" name='brand' placeholder="e.g: Nike">
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Product colors </label>
+                        <p class="card-description"> Type and hit enter </p>
+                        <input type='text' name="colors" class="tags" value="white">
+                    </div>
+
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Available sizes </label>
+                        <p class="card-description"> Type and hit enter </p>
+                        <input type='text' name="sizes" class="tags" value="S">
+                        <b> If the product has no size then leave this empty ! </b> 
+                    </div>
+
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Product Description </label>
+                        <textarea class="summernote" name="desc" placeholder='describe what you are gonna sell !'></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class='font-weight-bold'> Product Specifications </label>
+                        <textarea class="summernote" name="spec" data-value='<b>width</b>: 20mm </br> <b>height</b>: 50mm'></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2 w-100">
+                        Create
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('js')
+<script src="/back/js/file-upload.js"></script>
+<script src="/back/js/form-addons.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+@endsection

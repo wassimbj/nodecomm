@@ -1,0 +1,50 @@
+@layout('layouts.front')
+
+@section('content')
+        <!--================Home Banner Area =================-->
+        <section class="banner_area">
+            <div class="banner_inner d-flex align-items-center">
+				<div class="container">
+					<div class="banner_content text-center">
+						<h2>Login/Register</h2>
+						<div class="page_link">
+							<a href="index.html">Home</a>
+							<a href="registration.html">Register</a>
+						</div>
+					</div>
+				</div>
+            </div>
+        </section>
+        <!--================End Home Banner Area =================-->
+        
+        <!--================Login Box Area =================-->
+        <section class="login_box_area p_120">
+        	<div class="container">
+				<div>
+					@include('layouts.flash-msg')
+					<div class="login_form_inner reg_form pb-3">
+						<h3>Create an Account</h3>
+						<form class="row login_form" action="/register" method="POST">
+							<div class="col-md-12 form-group">
+							<input type="text" class="form-control" name="firstname" placeholder="First name" value='{{data.firstname || ''}}'>
+							</div>
+							<div class="col-md-12 form-group">
+								<input type="text" class="form-control" name="lastname" placeholder="Last name" value='{{data.lastname || ''}}'>
+							</div>
+							<div class="col-md-12 form-group">
+								<input type="email" class="form-control" name="email" placeholder="Email Address" value='{{data.email || ''}}'>
+							</div>
+							<div class="col-md-12 form-group">
+								<input type="password" class="form-control" name="password" placeholder="Password">
+							</div>
+							<div class="col-md-12 form-group">
+								<button type="submit" value="submit" class="btn submit_btn">Register</button>
+								<a href='/login'> Login </a>
+							</div>
+						</form>
+					</div>
+				</div>
+        	</div>
+        </section>
+        <!--================End Login Box Area =================-->
+@endsection

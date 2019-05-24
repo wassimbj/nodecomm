@@ -1,0 +1,17 @@
+/* Custom Bootsrap */
+.btn-outline-dark:focus,
+.btn.focus, .btn:focus,
+.form-control:focus{
+    box-shadow: none !important;
+}
+
+.btn-group-toggle>.btn, .btn-group-toggle>.btn-group>.btn{border-radius: 0 !important}
+
+.form-control:focus {border-color: #c5322d;}
+
+.active-button{
+    color: #fff;
+    background: #c5322d;
+}
+
+label{width: 100%}

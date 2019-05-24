@@ -1,0 +1,28 @@
+{
+  "name": "nodecomm",
+  "version": "1.0.0",
+  "description": "ecommerce website built with nodejs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "wassimbj",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "braintree": "^2.17.0",
+    "cloudinary": "^1.14.0",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.3",
+    "dotenv": "^8.0.0",
+    "edge.js": "^1.1.4",
+    "express": "^4.16.4",
+    "express-edge": "^1.0.0",
+    "express-session": "^1.16.1",
+    "mongoose": "^5.5.6",
+    "multer": "^1.4.1",
+    "multer-storage-cloudinary": "^2.2.1",
+    "nodemon": "^1.19.0"
+  }
+}

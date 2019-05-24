@@ -1,0 +1,7 @@
+@if(msg)
+     @each(err in msg)
+        <div class="alert alert-{{msgType}} mb-2">
+            {{err}}
+        </div>
+    @endeach
+@endif

@@ -1,0 +1,189 @@
+@layout('layouts.front')
+
+  @section('content')
+        <!--================Home Banner Area =================-->
+        <section class="banner_area">
+            <div class="banner_inner d-flex align-items-center">
+							<div class="container">
+								<div class="banner_content text-center">
+									<h2>Shopping Cart</h2>
+									<div class="page_link">
+										<a href="/user/cart" class='text-danger'>Cart</a>
+										<a href="/user/shipping">Shipping</a>
+										<a href="/user/checkout">Checkout</a>
+									</div>
+								</div>
+							</div>
+            </div>
+        </section>
+        
+        <!--================Cart Area =================-->
+				<!-- Shoping Cart -->
+				<div class="bg0 pt-5 pb-5">
+					<div class="container">
+						@include('layouts.flash-msg')
+						@if(result.length > 0)
+							<div class="row">
+								<div class="col-lg-7 col-md-12 m-b-50 cart_box h-100">
+									<!-- product cart card -->
+									@each(cart in result)
+										<div class="d-flex justify-content-around flex-wrap cart_p_card">
+											<!-- product image -->
+											<div>
+														<span class="cart_p_img"
+														style="background-image: url('{{images[cart.product._id]}}');
+																		background-position: center !important;
+																		background-size: cover !important;
+																		background-repeat: no-repeat !important;
+																		height: 140px;width: 140px;
+																		display: block;
+																		border-radius: 5px;">
+														</span>
+														<a href='/user/cart/{{cart._id}}/delete'
+															class="btn btn-light text-danger rounded-circle btn-sm"
+															style='background: #f3f5f7; margin-top: -40px'>
+															<i class="far fa-trash-alt"></i>
+														</a>
+											</div>
+											<!-- product info -->
+											<div class="d-flex flex-column w-75">
+												<div class="d-flex justify-content-between">
+													<h5> {{cart.product.title}} </h5>
+													<button type='button'
+																class="btn-light mr-2 text-muted rounded-circle text-center btn-sm" style='background: #f3f5f7'
+																data-toggle="modal" data-target="#update_cart_{{cart._id}}">
+															<i class="fas fa-pen"></i>
+													</button>
+												</div>
+												<small class="text-muted"> Size: {{cart.size}} </small>
+												<small class="text-muted"> Color: {{cart.color}} </small>
+													<div class="d-flex justify-content-between align-items-center">
+														<div class="d-flex align-items-center">
+															<small class="text-muted"> Quantity: </small> {{cart.quantity}}
+														</div>
+															<span class="text-muted">
+																<span class="quantity">
+																	{{cart.quantity}}
+																</span>
+																x ${{cart.product.price}}
+															</span>
+														<h4 class="font-weight-bold">
+															$<span class="cart_p_price">{{cart.total}}</span>
+														</h4>
+													</div>
+												</div>
+										</div><!-- end of product cart card -->
+
+										<!-- Update cart modal -->
+											<div class="modal fade" id="update_cart_{{cart._id}}">
+												<div class="modal-dialog modal-dialog-centered" role="document">
+													<form class="modal-content" method='POST' action='/user/cart/update'>
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleModalLongTitle"> {{cart.product.title}} </h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<input type="hidden" name="product_id" value='{{cart.product._id}}'>
+															<input type="hidden" value='{{cart._id}}' name="product">
+																@if(cart.product.colors[0] !== '')
+																	<span class='pr-3'> Color: </span>
+																	<div class="btn-group btn-group-toggle mt-3 color_{{cart._id}}" data-toggle="buttons">
+																		@each(color in cart.product.colors)
+																		<label class="btn btn-outline-dark mr-1">
+																		<input type="radio" name="color" autocomplete="off" value="{{color}}"> {{color}}
+																		</label>
+																		@endeach
+																	</div>
+																@endif
+																	<br>
+																@if(cart.product.sizes[0] !== '')
+																	<div class="btn-group btn-group-toggle mt-3 size_{{cart._id}}" data-toggle="buttons">
+																		<span class='pr-3'> Size: </span>
+																		@each(size in cart.product.sizes)
+																		<label class="btn btn-outline-dark mr-1">
+																			<input type="radio" name="size" autocomplete="off" value='{{size}}'> {{size}}
+																		</label>
+																		@endeach
+																	</div>
+																@endif
+																	<br>
+																<div class="product_count mt-3">
+																	<label for="qty">Quantity:</label>
+																 	<input type="text" name="quantity" id="{{cart.product._id.toString().substring(1, 7)}}" maxlength="{{cart.product.quantity}}" value="{{cart.quantity}}" class="input-text qty">
+																	<button onclick="var result = document.getElementById('{{cart.product._id.toString().substring(1, 7)}}'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+																	<button onclick="var result = document.getElementById('{{cart.product._id.toString().substring(1, 7)}}'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+																</div>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="genric-btn default radius" data-dismiss="modal">Close</button>
+															<button type="submit" class="genric-btn info radius">Save changes</button>
+														</div>
+													</form>
+												</div>
+												<script>
+													var productSize = document.querySelector('.size_{{cart._id}} input[value="{{cart.size}}"]')
+													productSize.setAttribute('checked', true);
+													productSize.closest('label').classList.add('focus', 'active');
+
+													var productColor = document.querySelector('.color_{{cart._id}} input[value="{{cart.color}}"]')
+													productColor.setAttribute('checked', true);
+													productColor.closest('label').classList.add('focus', 'active');
+												</script>
+											</div>
+									@endeach
+								</div>
+
+								{{--  Order summary and Coupons  --}}
+									<div class="col-lg-5 col-md-12 m-b-50">
+										<div class="order_box">
+												<h2>Your Order</h2>
+												<ul class="list">
+													<li><a href="#">Product <span>Total</span></a></li>
+													{{--  {{var total = 0}}  --}}
+													@each(cart in result)
+														<li>
+															<a href="#">{{cart.product.title}}
+																	<span class="middle">x {{cart.quantity}}</span>
+																	<span class="last">${{ cart.total }}</span>
+															</a>
+														</li>
+														{{--  {{ total = total + cart.total }}  --}}
+													@endeach
+												</ul>
+												<ul class="list list_2">
+													<li><a href="#">Subtotal <span>$2160.00</span></a></li>
+													<li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li>
+													<li><a href="#">Total <span>$2210.00</span></a></li>
+												</ul>
+												<a href="/user/shipping" class="green_btn w-100 text-center d-block"> Proceed To Checkout </a>
+        					  </div>
+									</div>
+						  </div>
+
+						@else
+								<div class="header-cart-item d-flex flex-column justify-content-center align-items-center">
+									<img src="/front/img/empty-cart.png" width="120">
+									<h3 class="text-center mt-2"> Your cart is empty </h3>
+									<small class="text-muted mt-2"> Buy something </small>
+								</div>
+						@endif	
+					</div>
+				</div>
+        
+        <!--================Cart Total Area =================-->
+			<!--
+					<section class="cart_total_area">
+						<div class="container">
+							<div class="cart_total_inner">
+								<div class="total_head">
+									
+								</div>
+								.
+							</div>
+						</div>
+					</section>
+			-->
+  @endsection
+        

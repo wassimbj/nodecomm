@@ -1,0 +1,13 @@
+product schema =>
+  title : String,
+  price: Number,
+  quantity: Number,
+  category: String,
+  brand: String,
+  colors: Array,
+  description: String,
+  specifications: String,
+
+productImages  =>
+ img: { type: Schema.Objectid, ref: product}
+ image: String

@@ -1,0 +1,96 @@
+@layout('layouts.front')
+
+@section('content')
+<!--================Home Banner Area =================-->
+<section class="banner_area">
+	<div class="banner_inner d-flex align-items-center">
+		<div class="container">
+					<div class="banner_content text-center">
+						<h2>Checkout</h2>
+						<div class="page_link">
+							<a href="/user/cart">Cart</a>
+							<a href="/user/shipping">Shipping</a>
+							<a href="/user/checkout" class='text-danger'>Checkout</a>
+						</div>
+					</div>
+				</div>
+            </div>
+		</section>
+        <!--================End Home Banner Area =================-->
+        
+        <!--================Checkout Area =================-->
+        <section class="checkout_area p_120">
+        	<div class="container">
+				@include('layouts.flash-msg')
+				<div class="wrapper">
+					<div class="checkout">
+						<div class="content">
+						{{--  Shipping and Details  --}}
+							<div class="progress-table-wrap">
+								<div class="progress-table">
+									<div class="table-row">
+										<div class="serial">Contact</div>
+										<div class="country">
+											email@gmail.com
+										</div>
+									</div>
+									<div class="table-row">
+										<div class="serial">Shipping</div>
+										<div class="country">
+											Ship to
+										</div>
+									</div>
+								</div>
+							</div>
+
+						{{--  Payment Form  --}}
+							<form id="payment-form" action="/user/checkout" method="post">
+								<section>
+									<div class="bt-drop-in-wrapper">
+										<div id="bt-dropin"></div>
+									</div>
+								</section>
+								<input id="nonce" type="hidden" name="payment_method_nonce" />
+								<button class="btn btn-success w-100 btn-lg" type="submit">
+									<span>Pay</span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
+		
+			</div>
+        </section>
+        <!--================End Checkout Area =================-->
+@endsection
+
+@section('js')
+	<script>
+		var form = document.querySelector('#payment-form');
+		var token = '{{clientToken}}';
+
+		braintree.dropin.create({
+			authorization: token,
+			container: '#bt-dropin',
+			paypal: {
+				flow: 'vault'
+			}
+		}, function(createErr, instance) {
+			form.addEventListener('submit', function(event) {
+				event.preventDefault();
+
+				instance.requestPaymentMethod(function(err, payload) {
+					if (err) {
+						console.log('Error', err);
+						return;
+					}
+
+					// Add the nonce to the form and submit
+					document.querySelector('#nonce').value = payload.nonce;
+					form.submit();
+				});
+			});
+		});
+	</script>
+@endsection
