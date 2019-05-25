@@ -1,5 +1,8 @@
 'use strict';
 const Order = require('../database/models/Order');
+const Cart = require('../database/models/Cart');
+const Shipping = require('../database/models/Shipping');
+
 const braintree = require('braintree');
 const gateway = require('../lib/gateway');
 const Controller = require('../controllers/Controller');
@@ -17,15 +20,39 @@ class Checkout extends Controller{
             braintree.Transaction.Status.SettlementPending,
             braintree.Transaction.Status.SubmittedForSettlement
         ];
+
+        this.amount = 0;
+        //  console.log(this)
     }
-    
+    // Cart empty middelware
+    middlware(req, res, next)
+    {
+        super.cart_is_empty(req.session.userid, (empty) => {
+            if(empty)
+            {
+                req.flash('warning', "You can't checkout, your cart is empty !");
+                req.flash('msgType', 'warning')
+                return res.redirect('/user/cart')
+            }
+            next()
+        });
+    }
+
     // Render the checkout view
-    index(req, res) {
-        gateway.clientToken.generate({}, function (err, response) {
-            res.render('front.checkout', {
+    async index(req, res) {
+        // console.log(this)
+        await gateway.clientToken.generate({}, (err, response) => {
+            const msgType = req.flash('msgType'),
+                msg = req.flash(msgType);
+            // Init the amount to pay
+            Cart.find({ author: req.session.userid }, (err, cart) => {
+                cart.map(item => {
+                    this.amount = this.amount + item.total;
+                });
+            });
+            return res.render('front.checkout', {
                 clientToken: response.clientToken,
-                msg: req.flash(req.flash('msgType')),
-                msgType: req.flash('msgType')
+                msg, msgType
             });
         });
     }
@@ -77,13 +104,13 @@ class Checkout extends Controller{
     }
 
     // Make the payment/checkout
-    pay(req, res) {
+    async pay(req, res) {
+
         var transactionErrors;
-        var amount = 10; // In production you should not take amounts directly from clients
         var nonce = req.body.payment_method_nonce;
 
         gateway.transaction.sale({
-            amount: amount,
+            amount: this.amount,
             paymentMethodNonce: nonce,
             options: {
                 submitForSettlement: true
@@ -92,16 +119,30 @@ class Checkout extends Controller{
             if (result.success || result.transaction) {
                 const method = result.transaction.creditCard.cardType,
                     paid_at = result.transaction.createdAt;
-                super.order_details(req.session.userid, (orders, total, ship_to) => {
-                    Order.create({
-                        customer: req.session.userid,
-                        orders,
-                        total,
-                        paid: 1,
-                        paid_at,
-                        method,
-                        ship_to
-                    });
+               super.order_details(req.session.userid, (orders, total) => {
+                   Shipping.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
+                    //    ship_to = ship.id
+                       Order.create({
+                           customer: req.session.userid,
+                           orders,
+                           total,
+                           paid: 1,
+                           paid_at,
+                           method,
+                           ship_to: ship.id
+                       }, (err, order) => {
+                           if(order)
+                           {
+                               // Update cart to paid
+                               order.orders.map(cart_id => {
+                                   Cart.findOneAndUpdate({_id: cart_id}, { paid: 1 }, (err, paid_cart) => { console.log(err) })
+                               });
+                               // Update the shipping to used
+                               Shipping.findOneAndUpdate({_id: order.ship_to}, { used: 1 }, (err, address) => { console.log(err) })
+                           }
+                           else { console.log('ERROR: ', err) }
+                       });
+                   })
                 });
                 req.flash('success', 'Your payment was successfully made !');
                 req.flash('msgType', 'success')

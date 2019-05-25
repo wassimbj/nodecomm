@@ -11,7 +11,7 @@ class Controller {
     
     cart_is_empty(user_id, cb)
     {
-        Cart.find({author: user_id}, (err, cart) => {
+        Cart.find({author: user_id, paid: 0}, (err, cart) => {
             if(!err && cart.length > 0)
                cb(false);
             else
@@ -22,21 +22,18 @@ class Controller {
    async order_details(user_id, cb)
     {
         var order_ids = [],
-            total = 0,
-            ship_to;
-
-       await Cart.find({author: user_id}, (err, cart) => {
+            total = 0;
+       await Cart.find({author: user_id, paid: 0}, (err, cart) => {
            cart.map(item => {
                order_ids.push(item.id);
                total = total + item.total;
            });
-        }, (error, cart) => {
-            Ship.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
-                ship_to = ship.id
-            })
         });
+        // await Ship.findOne({ user: user_id, used: 0 }).exec((err, ship) => {
+        //     ship_to = ship.id
+        // })
        
-       cb(order_ids, total, ship_to)
+       cb(order_ids, total)
 
     }
 }

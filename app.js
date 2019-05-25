@@ -27,6 +27,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 // Connect to the database
+mongoose.set('useFindAndModify', false);
 mongoose.connect('mongodb://localhost/nodeComm', { useNewUrlParser: true });
 db = mongoose.connection;
 db.once('open', () => { console.log('DB connected :)') });
@@ -64,44 +65,41 @@ const ProductImage = require('./database/models/ProductImage');
 const HomeController = require('./controllers/HomeController');
 const ShopController = require('./controllers/ShopController');
 const AdminController = require('./controllers/AdminController');
-const UserController = require('./controllers/UserController');
-const CartController = require('./controllers/CartController');
-const ShippingController = require('./controllers/ShippingController');
-const CheckoutController = require('./controllers/CheckoutController');
+// const UserController = require('./controllers/UserController');
+// const CartController = require('./controllers/CartController');
+// const ShippingController = require('./controllers/ShippingController');
+// const CheckoutController = require('./controllers/CheckoutController');
 
+//######################## Bring all Routes #########################
+const userAuth = require('./routes/auth');
+const userCart = require('./routes/cart');
+const userShip = require('./routes/ship');
+const userCheckout = require('./routes/checkout');
 
 // ############### Front ##################
 app.use('*', (req, res, next) => {
     edge.global('auth', req.session.userid);
     next();
 });
+
 app.get('/', HomeController.index);
 
 app.get('/shop', ShopController.index);
 
 app.get('/product/:name', ShopController.single)
 
-app.get('/register', UserController.redirectIfAuth, UserController.register);
-app.post('/register', UserController.redirectIfAuth, UserController.store);
+// User auth
+app.use('/auth', userAuth);
 
-app.get('/login', UserController.redirectIfAuth, UserController.login);
-app.post('/login', UserController.redirectIfAuth, UserController.loginUser);
+// User cart
+app.use('/user', userCart)
 
-app.get('/user/logout', UserController.auth, UserController.logout)
+// User shipping
+app.use('/user/shipping', userShip)
 
-app.get('/user/cart', UserController.auth, CartController.index);
-app.post('/user/cart/add', UserController.auth, CartController.addToCart);
-app.post('/user/cart/update', UserController.auth, CartController.updateCart)
-app.get('/user/cart/:id/delete', UserController.auth, CartController.delete);
+// Checkout
+app.use('/user/checkout', userCheckout)
 
-app.get('/user/shipping', UserController.auth, ShippingController.index)
-app.post('/user/shipping', UserController.auth, ShippingController.store)
-// Checkout--->
-app.get('/user/checkout', CheckoutController.index);
-
-app.get('/user/checkout/:id', CheckoutController.transaction);
-
-app.post('/user/checkout', CheckoutController.pay);
 
 // ############### Back (Admin) ##################
 

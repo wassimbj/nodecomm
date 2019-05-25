@@ -7,20 +7,25 @@ class Cart{
     {
         const msgType = req.flash('msgType'),
             msg = req.flash(msgType);
-        await CartModel.find({author: req.session.userid})
+        await CartModel.find({author: req.session.userid, paid: 0})
                 .populate('product')
                 .exec((err, result) => {
-                    var images = {};
-                    result.map(function(item){
-                            ProductImage.findOne({ img_to: item.product._id }, function(err, img){
-                                images[img.img_to] = img.image;
-                            });
-                    });
+                    var images = {},
+                        total = 0;
+            
+                    result.map(function (item) {
+                        ProductImage.findOne({ img_to: item.product._id }, function (err, img) {
+                            images[img.img_to] = img.image;
+                        });
+                        total = total + item.total
+                        // console.log(item.total)
+                    })
                     return res.render('front.cart', {
                         images,
                         result,
-                        msg, msgType
-                    });
+                        msg, msgType,
+                        total
+                    })
 
                 });
     }
@@ -44,7 +49,7 @@ class Cart{
                     if (Math.floor(item.quantity / quantity) < 2)
                         return res.json({ type: 'error', msg: "Sorry ! but you can't choose that much quantity !" });
                     // Success !
-                    CartModel.findOne({ product: item._id, author: req.session.userid }, (errs, cart) => {
+                    CartModel.findOne({ product: item._id, author: req.session.userid, paid: 0 }, (errs, cart) => {
                         // check if the product is the same in the cart just increase the quantity
                         // else create a new product in the cart
                         if (cart && cart.size == size && cart.color == color) {

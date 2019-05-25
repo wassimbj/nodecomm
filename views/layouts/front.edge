@@ -60,12 +60,12 @@
 									<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="far fa-user"></i></a>
 									<ul class="dropdown-menu">
                                         @if(auth)
-                                            <li class="nav-item"><a class="nav-link" href="login.html">Profile</a>
-                                            <li class="nav-item"><a class="nav-link" href="login.html">Settings</a>
-                                            <li class="nav-item"><a class="nav-link" href="/user/logout">Logout</a>
+                                            <li class="nav-item"><a class="nav-link" href="#profile">Profile</a>
+                                            <li class="nav-item"><a class="nav-link" href="#settings">Settings</a>
+                                            <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a>
                                         @else
-                                            <li class="nav-item"><a class="nav-link" href="/login">Login</a>
-                                            <li class="nav-item"><a class="nav-link" href="/register">register</a>
+                                            <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a>
+                                            <li class="nav-item"><a class="nav-link" href="/auth/register">register</a>
                                         @endif
 									</ul>
 								</li> 

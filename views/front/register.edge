@@ -24,7 +24,7 @@
 					@include('layouts.flash-msg')
 					<div class="login_form_inner reg_form pb-3">
 						<h3>Create an Account</h3>
-						<form class="row login_form" action="/register" method="POST">
+						<form class="row login_form" action="/auth/register" method="POST">
 							<div class="col-md-12 form-group">
 							<input type="text" class="form-control" name="firstname" placeholder="First name" value='{{data.firstname || ''}}'>
 							</div>
@@ -39,7 +39,7 @@
 							</div>
 							<div class="col-md-12 form-group">
 								<button type="submit" value="submit" class="btn submit_btn">Register</button>
-								<a href='/login'> Login </a>
+								<a href='/auth/login'> Login </a>
 							</div>
 						</form>
 					</div>

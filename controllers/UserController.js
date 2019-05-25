@@ -44,7 +44,7 @@ class User {
                   req.flash('danger', error)
                   req.flash('msgType', 'danger');
                   req.flash('data', req.body);
-                  res.redirect('/register');
+                  res.redirect('/auth/register');
               }
       });
     }
@@ -65,13 +65,13 @@ class User {
                 }else{
                     req.flash('danger', 'Oops ! Wrong password');
                     req.flash('msgType', 'danger');
-                    return req.redirect('/login');
+                    return req.redirect('/auth/login');
                 }
               });
           }else{
             req.flash('danger', 'Oops ! no user was found');
             req.flash('msgType', 'danger');
-            return res.redirect('/login');
+            return res.redirect('/auth/login');
           }
        });
 
@@ -81,7 +81,7 @@ class User {
     auth(req, res, next){
         UserModel.findOne({_id: req.session.userid}, (err, user) => {
             if(err || !user)
-                return res.redirect('/login')
+                return res.redirect('/auth/login')
               next();
             });
     }
