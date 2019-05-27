@@ -49,10 +49,17 @@ $(document).ready(function () {
         var category = get_filter('category');
         var brand = get_filter('brand');
         var color = get_filter('color');
+        var sorting = $('.sorting').val();
         $.ajax({
             url: '/shop',
             method: 'POST',
-            data: { min: min, max: max, category: JSON.stringify(category), brand: JSON.stringify(brand), color: JSON.stringify(color)},
+            data: {
+                min, max,
+                category: JSON.stringify(category),
+                brand: JSON.stringify(brand),
+                color: JSON.stringify(color),
+                sorting
+            },
             beforeSend: () => { $('.latest_product_inner').html(loader) },
             success: function(data)
             {
@@ -71,6 +78,9 @@ $(document).ready(function () {
         return filters;
     }
 
+    $('.sorting').on('change', function(){
+        filter_products();
+    })
     $('.filter_input').on('click', function(){
         filter_products();
     });

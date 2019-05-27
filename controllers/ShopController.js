@@ -5,27 +5,26 @@ const Cart = require('../database/models/Cart');
 // $lt = Less Then
 // $gte = Greater Then Or Equal
 // $in = in array [1,2,,3,4,5,6] {$in: [10, 5, 20, 80]}
-
+// $sort = {$sort: field: -1 for DESC and 1 for ASC}
 class Shop {
     constructor()
     {
-        // Init
+        this.perpage = 10;
     }
     // Render shop view
     index(req, res){
-        Product.aggregate([
-            {
-                $lookup: {
-                    from: 'productimages',
-                    localField: '_id',
-                    foreignField: 'img_to',
-                    as: 'images'
-                }
-            }
-        ]).exec((err, resp) => {
-            const products = resp;
-            // var colors = '', brands = '', cates = '';
-                Product.aggregate([
+        // Product.aggregate([
+        //     {
+        //         $lookup: {
+        //             from: 'productimages',
+        //             localField: '_id',
+        //             foreignField: 'img_to',
+        //             as: 'images'
+        //         }
+        //     }
+        // ]).exec((err, products) => {
+
+            Product.aggregate([
                     {$unwind: '$colors'},
                     {
                         $group: {
@@ -36,16 +35,18 @@ class Shop {
                         }
                     },
                 ]).exec((errs, data) => {
-                    return res.render('front.shop', { products, data: data[0] });
+                    return res.render('front.shop', {data: data[0] });
                 })
-            });
+            // });
     }
 
     // Filter products
     filter(req, res)
     {
-        var options = { $match: {} }
-        const { min, max, category, color, brand} = req.body;
+        var options = { $match: {} },
+            sort = {};
+
+        const { min, max, category, color, brand, sorting} = req.body;
         let colors = JSON.parse(color);
         let brands = JSON.parse(brand);
         let cates = JSON.parse(category);
@@ -59,11 +60,18 @@ class Shop {
         if (cates.length > 0)
             options.$match.category = { $in: cates }
         
+        if (sorting == 'lowPrice')
+            sort.$sort = {price: 1}
+        if(sorting == 'highPrice')
+            sort.$sort = {price: -1};
+        if(sorting == 'newest')
+            sort.$sort = {created_at: -1};
         // res.json(options)
         // res.json(req.body)
-
+        console.log(sort)
         Product.aggregate([
             options,
+            sort,
             {
                 $lookup: {
                     from: 'productimages',
@@ -71,9 +79,10 @@ class Shop {
                     foreignField: 'img_to',
                     as: 'images'
                 }
-            }
+            },
+            {$limit: this.perpage}
         ]).exec((err, products) => {
-            console.log(options)
+            // console.log(options)
             var output = '';
             products.map(product => {
                 output += `
@@ -110,6 +119,8 @@ class Shop {
             // </div>
 
     }
+
+
 
     // Single product
     single(req, res){
