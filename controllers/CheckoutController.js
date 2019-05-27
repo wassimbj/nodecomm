@@ -119,7 +119,7 @@ class Checkout extends Controller{
             if (result.success || result.transaction) {
                 const method = result.transaction.creditCard.cardType,
                     paid_at = result.transaction.createdAt;
-               super.order_details(req.session.userid, (orders, total) => {
+                super.order_details(req.session.userid, (orders, total) => {
                    Shipping.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
                     //    ship_to = ship.id
                        Order.create({
@@ -144,9 +144,8 @@ class Checkout extends Controller{
                        });
                    })
                 });
-                req.flash('success', 'Your payment was successfully made !');
-                req.flash('msgType', 'success')
-                return res.redirect('/user/checkout/');
+
+                return res.redirect('/user/checkout/success');
             } else {
                 transactionErrors = result.errors.deepErrors();
                 req.flash('danger', Checkout.prototype.formatErrors(transactionErrors));

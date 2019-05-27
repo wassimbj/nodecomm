@@ -7,11 +7,6 @@
 			<div class="container">
 				<div class="banner_content text-center">
 					<h2> Lets shop !</h2>
-					<!--  <div class="page_link">
-						<a href="index.html">Home</a>
-						<a href="category.html">Category</a>
-						<a href="category.html">Women Fashion</a>
-					</div>  -->
 				</div>
 			</div>
 		</div>
@@ -22,6 +17,8 @@
 	<section class="cat_product_area p_120">
 		<div class="container">
 			<div class="row flex-row-reverse">
+
+				{{--  Product cards wrapper  --}}
 				<div class="col-lg-9">
 					<div class="product_top_bar">
 						<div class="left_dorp">
@@ -50,6 +47,7 @@
 							</nav>
 						</div>
 					</div>
+					{{--  Product card  --}}
 					<div class="latest_product_inner row">
 						@each(product in products)
 						  <div class="col-lg-4 col-md-4 col-sm-6">
@@ -68,71 +66,76 @@
 						@endeach
 					</div>
 				</div>
+
+				{{--  Filter options  --}}
 				<div class="col-lg-3">
 					<div class="left_sidebar_area">
+						{{--  Category filtering  --}}
 						<aside class="left_widgets cat_widgets">
 							<div class="l_w_title">
 								<h3>Browse Categories</h3>
 							</div>
 							<div class="widgets_inner">
 								<ul class="list">
-									<li><a href="#">Fruits and Vegetables</a></li>
+									
+									@each(cate in data.cates)
 									<li>
-										<a href="#">Meat and Fish</a>
-										<ul class="list">
-											<li><a href="#">Frozen Fish</a></li>
-											<li><a href="#">Dried Fish</a></li>
-											<li><a href="#">Fresh Fish</a></li>
-											<li><a href="#">Meat Alternatives</a></li>
-											<li><a href="#">Meat</a></li>
-										</ul>
+										<div class="switch-wrap d-flex justify-content-between">
+											<p> {{cate}} </p>
+											<div class="primary-radio">
+												<input type="radio" id="{{cate}}-radio" name="category" value='{{cate}}' class='filter_input'>
+												<label for="{{cate}}-radio"></label>
+											</div>
+										</div>
 									</li>
-									<li><a href="#">Cooking</a>
-										<ul class="list">
-											<li><a href="#">Frozen Fish</a></li>
-											<li><a href="#">Dried Fish</a></li>
-											<li><a href="#">Fresh Fish</a></li>
-											<li><a href="#">Meat Alternatives</a></li>
-											<li><a href="#">Meat</a></li>
-										</ul>
-									</li>
-									<li><a href="#">Beverages</a>
-										<ul class="list">
-											<li><a href="#">Frozen Fish</a></li>
-											<li><a href="#">Dried Fish</a></li>
-											<li><a href="#">Fresh Fish</a></li>
-											<li><a href="#">Meat Alternatives</a></li>
-											<li><a href="#">Meat</a></li>
-										</ul>
-									</li>
-									<li><a href="#">Home and Cleaning</a></li>
+									@endeach
+								
 								</ul>
 							</div>
 						</aside>
+						{{--  Other filters, color, brand...  --}}
 						<aside class="left_widgets p_filter_widgets">
 							<div class="l_w_title">
 								<h3>Product Filters</h3>
 							</div>
+
 							<div class="widgets_inner">
 								<h4>Brand</h4>
 								<ul class="list">
-									<li><a href="#">Apple</a></li>
-									<li><a href="#">Asus</a></li>
-									<li class="active"><a href="#">Gionee</a></li>
-									<li><a href="#">Micromax</a></li>
-									<li><a href="#">Samsung</a></li>
+									
+									@each(brand in data.brands)
+									<li>
+										<div class="switch-wrap d-flex justify-content-between">
+											<p>{{brand}}</p>
+											<div class="primary-checkbox">
+												<input type="checkbox" id="{{brand}}-checkbox" name='brand' value="{{brand}}" class='filter_input'>
+												<label for="{{brand}}-checkbox"></label>
+											</div>
+										</div>
+									</li>
+									@endeach
+								
 								</ul>
 							</div>
+							
 							<div class="widgets_inner">
 								<h4>Color</h4>
 								<ul class="list">
-									<li><a href="#">Black</a></li>
-									<li><a href="#">Black Leather</a></li>
-									<li class="active"><a href="#">Black with red</a></li>
-									<li><a href="#">Gold</a></li>
-									<li><a href="#">Spacegrey</a></li>
+									@each(color in data.colors)
+									<li>
+										<div class="switch-wrap d-flex justify-content-between">
+											<p>{{color}}</p>
+											<div class="primary-checkbox">
+											 <input type="checkbox" id="{{color}}-1" name='color' value="{{color}}" class='filter_input'>
+												<label for="{{color}}-1"></label>
+											</div>
+										</div>
+									</li>
+									@endeach
+									
 								</ul>
 							</div>
+
 							<div class="widgets_inner">
 								<h4>Price</h4>
 								<div class="range_item">
@@ -140,12 +143,16 @@
 									<div class="row m0">
 										<label for="amount">Price : </label>
 										<input type="text" id="amount" readonly>
+										<input type="hidden" id='min_price' value='0'>
+										<input type="hidden" id='max_price' value='50000'>
 									</div>
 								</div>
 							</div>
+
 						</aside>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</section>

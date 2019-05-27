@@ -29,10 +29,6 @@ class Controller {
                total = total + item.total;
            });
         });
-        // await Ship.findOne({ user: user_id, used: 0 }).exec((err, ship) => {
-        //     ship_to = ship.id
-        // })
-       
        cb(order_ids, total)
 
     }

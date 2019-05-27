@@ -84,7 +84,9 @@ app.use('*', (req, res, next) => {
 
 app.get('/', HomeController.index);
 
-app.get('/shop', ShopController.index);
+app.get('/shop', ShopController.index.bind(ShopController));
+
+app.post('/shop', ShopController.filter.bind(ShopController));
 
 app.get('/product/:name', ShopController.single)
 
