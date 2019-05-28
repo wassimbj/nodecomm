@@ -88,6 +88,8 @@ app.get('/shop', ShopController.index.bind(ShopController));
 
 app.post('/shop', ShopController.filter.bind(ShopController));
 
+app.post('/shop/page', ShopController.page.bind(ShopController));
+
 app.get('/product/:name', ShopController.single)
 
 // User auth

@@ -4183,7 +4183,8 @@ h6 {
   border-radius: 0px;
 }
 
-.cat_page .pagination li a {
+.cat_page .pagination li a,
+.cat_page .pagination button a {
   height: 40px;
   width: 40px;
   border-radius: 0px;
@@ -4199,13 +4200,15 @@ h6 {
   font-family: "Roboto", sans-serif;
 }
 
-.cat_page .pagination li.blank a {
+.cat_page .pagination li.blank a,
+.cat_page .pagination button.blank a{
   background: transparent;
   color: #cccccc;
   border: none;
 }
 
-.cat_page .pagination li:hover a, .cat_page .pagination li.active a {
+.cat_page .pagination li:hover a, .cat_page .pagination li.active a,
+.cat_page .pagination button:hover a, .cat_page .pagination button.active a {
   background: #c5322d;
   color: #fff;
   border-color: #c5322d;

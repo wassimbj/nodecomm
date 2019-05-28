@@ -81,7 +81,8 @@ $(document).ready(function () {
     $('.sorting').on('change', function(){
         filter_products();
     })
-    $('.filter_input').on('click', function(){
+    $('.filter_input').on('change', function(){
+        console.log('CLICKED !!');
         filter_products();
     });
     /*----------------------------------------------------*/
@@ -90,8 +91,8 @@ $(document).ready(function () {
     $("#slider-range").slider({
         range: true,
         min: 0,
-        max: 500,
-        values: [0, 500],
+        max: $(this).find('#max_price').val(),
+        values: [0, $(this).find('#max_price').val()],
         slide: function (event, ui) {
             $("#amount").val(`$${ui.values[0]} - $${ui.values[1]}`);
             $('#min_price').val(ui.values[0]);
@@ -103,4 +104,32 @@ $(document).ready(function () {
         " - $" + $("#slider-range").slider("values", 1));
 
 
+    // Pagination
+    add_active_to_link('1')
+    function add_active_to_link(link)
+    {
+        const pageLink = $('.page-item[data-page="' + link + '"]');
+        pageLink.addClass('active').siblings().removeClass('active');
+        pageLink.attr('disabled', true).siblings().attr('disabled', false);
+        // pageLink.a
+    }
+    $('.page-item').on('click', function(){
+        let page = $(this).data('page');
+        $.ajax({
+            url: '/shop/page',
+            method: 'POST',
+            data: {page},
+            success: function (status) {
+                // console.log(status)
+                if(status)
+                {
+                    add_active_to_link(page);
+                    filter_products();
+                }else{
+                    $('.latest_product_inner').html('Oops ! someting went wrong')
+                }
+            }
+        });
+    });
+    
 }); // END OF jQuery

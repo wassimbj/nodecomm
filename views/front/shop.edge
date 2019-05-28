@@ -30,15 +30,17 @@
 						</div>
 						<div class="right_page ml-auto">
 							<nav class="cat_page" aria-label="Page navigation example">
-								<ul class="pagination">
-									<li class="page-item"><a class="page-link" href="#"><i class="fas fa-arrow-left"></i></a></li>
-									<li class="page-item active"><a class="page-link" href="#">1</a></li>
-									<li class="page-item"><a class="page-link" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item blank"><a class="page-link" href="#">...</a></li>
-									<li class="page-item"><a class="page-link" href="#">6</a></li>
-									<li class="page-item"><a class="page-link" href="#"><i class="fas fa-arrow-right"></i></a></li>
-								</ul>
+								<div class="pagination">
+									<button disabled class="btn p-0 page-item"><a class="page-link"><i class="fas fa-arrow-left"></i></a></button>
+
+									@if(dataPerpage > 1)
+										@each(i in links)
+											<button class="btn p-0 page-item" data-page='{{i}}'><a class="page-link">{{i}}</a></button>
+										@endeach
+									@endif
+							
+									<button disabled class="btn p-0 page-item"><a class="page-link"><i class="fas fa-arrow-right"></i></a></button>
+								</div>
 							</nav>
 						</div>
 					</div>
@@ -71,21 +73,14 @@
 								<h3>Browse Categories</h3>
 							</div>
 							<div class="widgets_inner">
-								<ul class="list">
-									
+								<div class="btn-group-toggle" data-toggle="buttons">
 									@each(cate in data.cates)
-									<li>
-										<div class="switch-wrap d-flex justify-content-between">
-											<p> {{cate}} </p>
-											<div class="primary-radio">
-												<input type="radio" id="{{cate}}-radio" name="category" value='{{cate}}' class='filter_input'>
-												<label for="{{cate}}-radio"></label>
-											</div>
-										</div>
-									</li>
+									<label class="btn genric-btn danger-border radius mb-1">
+										<input type="checkbox" id="{{cate}}-checkbox" name="category" value='{{cate}}' class='filter_input'>
+										{{cate}}
+									</label>
 									@endeach
-								
-								</ul>
+								</div>
 							</div>
 						</aside>
 						{{--  Other filters, color, brand...  --}}
@@ -139,7 +134,7 @@
 										<label for="amount">Price : </label>
 										<input type="text" id="amount" readonly>
 										<input type="hidden" id='min_price' value='0'>
-										<input type="hidden" id='max_price' value='50000'>
+										<input type="hidden" id='max_price' value='{{data.max}}'>
 									</div>
 								</div>
 							</div>

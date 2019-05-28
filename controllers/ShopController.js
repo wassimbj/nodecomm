@@ -6,36 +6,39 @@ const Cart = require('../database/models/Cart');
 // $gte = Greater Then Or Equal
 // $in = in array [1,2,,3,4,5,6] {$in: [10, 5, 20, 80]}
 // $sort = {$sort: field: -1 for DESC and 1 for ASC}
+// DESC(-1) From high to low
+// ASC(1) from low to high
 class Shop {
     constructor()
     {
-        this.perpage = 10;
+        this.perpage = 2;
+        this.skip = 0;
     }
-    // Render shop view
-    index(req, res){
-        // Product.aggregate([
-        //     {
-        //         $lookup: {
-        //             from: 'productimages',
-        //             localField: '_id',
-        //             foreignField: 'img_to',
-        //             as: 'images'
-        //         }
-        //     }
-        // ]).exec((err, products) => {
 
-            Product.aggregate([
-                    {$unwind: '$colors'},
-                    {
-                        $group: {
+    // Get all the filter opstions from the products table in the DB
+    index(req, res){
+        Product.aggregate([
+            {$unwind: '$colors'},
+            {
+                $group: {
                             _id: null,
                             colors: { $addToSet: '$colors' },
                             brands: { $addToSet: '$brand' },
                             cates: { $addToSet: '$category' },
+                            max: {$max: '$price'}
+                            // min: {$min: '$price'}
                         }
                     },
                 ]).exec((errs, data) => {
-                    return res.render('front.shop', {data: data[0] });
+                    // console.log(data)
+                    this.skip = 0; // init it to "0"
+                    Product.countDocuments((err, count) => {
+                        var links = [],
+                            dataPerpage = Math.ceil(count / this.perpage);
+                        for (var i = 1; i <= dataPerpage; i++)
+                             links.push(i);
+                        return res.render('front.shop', { data: data[0], dataPerpage, links });
+                    })
                 })
             // });
     }
@@ -43,6 +46,7 @@ class Shop {
     // Filter products
     filter(req, res)
     {
+        // console.log('Filter = ', this.skip)
         var options = { $match: {} },
             sort = {};
 
@@ -51,6 +55,7 @@ class Shop {
         let brands = JSON.parse(brand);
         let cates = JSON.parse(category);
 
+        // filtering
         if(min || max)
             options.$match.price = { $gte: parseInt(min), $lte: parseInt(max)}
         if (colors.length > 0)
@@ -59,16 +64,24 @@ class Shop {
             options.$match.brand = { $in: brands }
         if (cates.length > 0)
             options.$match.category = { $in: cates }
-        
-        if (sorting == 'lowPrice')
-            sort.$sort = {price: 1}
-        if(sorting == 'highPrice')
-            sort.$sort = {price: -1};
-        if(sorting == 'newest')
-            sort.$sort = {created_at: -1};
+
+        // Sorting
+        switch(sorting)
+        {
+            case 'lowPrice':
+                sort.$sort = { price: 1 }
+                break;
+            case 'highPrice':
+                sort.$sort = { price: -1 }
+                break;
+            case 'newest':
+                sort.$sort = { created_at: -1 }
+                break;
+            default: sort.$sort = { price: 1 }
+        }
         // res.json(options)
         // res.json(req.body)
-        console.log(sort)
+        // console.log(sort)
         Product.aggregate([
             options,
             sort,
@@ -80,6 +93,7 @@ class Shop {
                     as: 'images'
                 }
             },
+            {$skip: this.skip},
             {$limit: this.perpage}
         ]).exec((err, products) => {
             // console.log(options)
@@ -91,7 +105,7 @@ class Shop {
                             <div class="f_p_img">
                                 <img class="img-fluid" src="${product.images[0].image}" alt="">
                                 <div class="p_icon">
-                                    <a href="#"><i class="lnr lnr-heart"></i></a>
+                                    <a><i class="lnr lnr-heart"></i></a>
                                     <a href="/product/${product.title}"><i class="lnr lnr-cart"></i></a>
                                 </div>
                             </div>
@@ -104,19 +118,6 @@ class Shop {
 
             res.json(output);
         });
-            // <div class="col-lg-4 col-md-4 col-sm-6" >
-            //     <div class="f_p_item">
-            //         <div class="f_p_img">
-            //             <img class="img-fluid" src="{{product.images[0].image}}" alt="">
-            //             <div class="p_icon">
-            //                 <a href="#"><i class="lnr lnr-heart"></i></a>
-            //                 <a href="/product/{{product.title}}"><i class="lnr lnr-cart"></i></a>
-            //             </div>
-            //         </div>
-            //         <a href="/product/{{product.title}}"><h4>{{ product.title }}</h4></a>
-            //         <h5>${{ product.price }}</h5>
-            //     </div>
-            // </div>
 
     }
 
@@ -144,6 +145,20 @@ class Shop {
             });
         });
         //res.json(req.params.name);
+    }
+
+    // Data per page
+    page(req, res)
+    {
+        // get the page number - 1
+        const page = parseInt(req.body.page) - 1;
+        // multiply this.perpage by page number
+        // E.g: perpage = 10, page = 2(wich is 1), skip = 10
+        this.skip = this.perpage * page;
+        // console.log('Page = ', this.skip)
+        res.json(true)
+        // call filter_data()
+        
     }
 }
 
