@@ -105,31 +105,50 @@ $(document).ready(function () {
 
 
     // Pagination
-    add_active_to_link('1')
-    function add_active_to_link(link)
-    {
-        const pageLink = $('.page-item[data-page="' + link + '"]');
-        pageLink.addClass('active').siblings().removeClass('active');
-        pageLink.attr('disabled', true).siblings().attr('disabled', false);
-        // pageLink.a
-    }
+    // add_active_to_link('1')
+    // function add_active_to_link(link)
+    // {
+    //     const pageLink = $('.page-item[data-page="' + link + '"]');
+    //     pageLink.addClass('active').siblings().removeClass('active');
+    //     pageLink.attr('disabled', true).siblings().attr('disabled', false);
+    //     // pageLink.a
+    // }
+
+    // function disable_btn(btn) {
+    //     const pageLink = btn;
+    //     pageLink.attr('disabled', true).siblings().attr('disabled', false);
+    // }
+
+    var page = 1;
     $('.page-item').on('click', function(){
-        let page = $(this).data('page');
+        // let page = $(this).data('page');
+        var action = $(this).data('action'),
+            btn = $(this);
+
+            if(action == 'next')
+                page++;
+            else if(action == 'prev')
+                page--
+
         $.ajax({
             url: '/shop/page',
             method: 'POST',
             data: {page},
             success: function (status) {
-                // console.log(status)
+                console.log(page, status)
                 if(status)
                 {
-                    add_active_to_link(page);
                     filter_products();
+                    $('.page-item').attr('disabled', false)
+                    
                 }else{
-                    $('.latest_product_inner').html('Oops ! someting went wrong')
+                    btn.attr('disabled', true).siblings().attr('disabled', false)
                 }
             }
         });
     });
+
+    // Add to wishlist
+        // NEXT TIME ...
     
 }); // END OF jQuery

@@ -11,8 +11,9 @@ const Cart = require('../database/models/Cart');
 class Shop {
     constructor()
     {
-        this.perpage = 2;
+        this.perpage = 10;
         this.skip = 0;
+        this.pages = 0;
     }
 
     // Get all the filter opstions from the products table in the DB
@@ -31,13 +32,15 @@ class Shop {
                     },
                 ]).exec((errs, data) => {
                     // console.log(data)
-                    this.skip = 0; // init it to "0"
+                    this.skip = 0; //init it to "0"
+
                     Product.countDocuments((err, count) => {
                         var links = [],
-                            dataPerpage = Math.ceil(count / this.perpage);
-                        for (var i = 1; i <= dataPerpage; i++)
+                            pages = Math.ceil(count / this.perpage);
+                            this.pages = pages;
+                        for (var i = 1; i <= pages; i++)
                              links.push(i);
-                        return res.render('front.shop', { data: data[0], dataPerpage, links });
+                        return res.render('front.shop', { data: data[0], pages, links });
                     })
                 })
             // });
@@ -46,7 +49,7 @@ class Shop {
     // Filter products
     filter(req, res)
     {
-        // console.log('Filter = ', this.skip)
+        console.log('Skip = ', this.skip)
         var options = { $match: {} },
             sort = {};
 
@@ -150,14 +153,25 @@ class Shop {
     // Data per page
     page(req, res)
     {
-        // get the page number - 1
-        const page = parseInt(req.body.page) - 1;
-        // multiply this.perpage by page number
-        // E.g: perpage = 10, page = 2(wich is 1), skip = 10
-        this.skip = this.perpage * page;
-        // console.log('Page = ', this.skip)
-        res.json(true)
-        // call filter_data()
+
+        // 1## get the page number - 1
+        var pageVal = parseInt(req.body.page);
+        var page = pageVal - 1;
+
+        if(pageVal > 0 && pageVal <= this.pages )
+        {
+            this.skip = this.perpage * page;
+            res.json(true)
+        }else
+            res.json(false)
+       
+        // console.log(this.pages, page)
+        // console.log('Page: ', page, ' - Skip: ', this.skip)
+
+        // 2## multiply this.perpage by page number
+        // ----- E.g: perpage = 10, page = 2(wich is 1), skip = 10
+       
+        // last ## call filter_data() in the jQuery
         
     }
 }

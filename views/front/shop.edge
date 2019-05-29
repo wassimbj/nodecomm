@@ -31,15 +31,23 @@
 						<div class="right_page ml-auto">
 							<nav class="cat_page" aria-label="Page navigation example">
 								<div class="pagination">
-									<button disabled class="btn p-0 page-item"><a class="page-link"><i class="fas fa-arrow-left"></i></a></button>
-
-									@if(dataPerpage > 1)
-										@each(i in links)
-											<button class="btn p-0 page-item" data-page='{{i}}'><a class="page-link">{{i}}</a></button>
-										@endeach
+									@if(pages > 1)
+										<button class="btn p-0 page-item" data-action='prev' disabled>
+											<a class="page-link"><i class="fas fa-arrow-left"></i></a>
+										</button>
+								
+										<button class="btn p-0 page-item" data-action='next'>
+											<a class="page-link"><i class="fas fa-arrow-right"></i></a>
+										</button>
+									@else
+										<button class="btn p-0 page-item" data-action='prev' disabled>
+											<a class="page-link"><i class="fas fa-arrow-left"></i></a>
+										</button>
+								
+										<button class="btn p-0 page-item" data-action='next' disabled>
+											<a class="page-link"><i class="fas fa-arrow-right"></i></a>
+										</button>
 									@endif
-							
-									<button disabled class="btn p-0 page-item"><a class="page-link"><i class="fas fa-arrow-right"></i></a></button>
 								</div>
 							</nav>
 						</div>
