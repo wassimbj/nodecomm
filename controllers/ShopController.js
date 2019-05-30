@@ -99,41 +99,6 @@ class Shop {
                     as: 'images'
                 }
             },
-
-            {
-                $lookup: {
-                    from: 'wishlists',
-                    localField: '_id',
-                    foreignField: 'product',                  
-                    as: 'wishlist'
-                }
-            },
-
-           {
-               $project:
-               {
-                   colors: 1,
-                   sizes: 1,
-                   created_at: 1,
-                   title: 1,
-                   price: 1,
-                   quantity: 1,
-                   category: 1,
-                   brand: 1,
-                   description:1,
-                   specifications: 1,
-                   images: '$images',
-                   wishlist:
-                   {
-                       $filter: { 
-                          input: '$wishlist',
-                          as: 'wish',
-                           cond: { $eq: ['$$wish.author', mongoose.Types.ObjectId(user_id)]}
-                        }
-                   }
-               }
-           },
-         
             {$skip: this.skip},
             {$limit: this.perpage}
         ]).exec((err, products) => {
@@ -143,15 +108,8 @@ class Shop {
                 output += `<div class="col-lg-4 col-md-4 col-sm-6">
                             <div class="f_p_item">
                                 <div class="f_p_img">
-                                ${
-                                    product.wishlist.length > 0 ?
-                                        `<div class='in_wishlist'> <i class="lnr lnr-heart"></i> </div>`
-                                    :
-                                        `<div class='wishlist_badge'>  </div>`
-                                }
                                     <img class="img-fluid" src="${product.images[0].image}" alt="">
                                     <div class="p_icon">
-                                        <button class='add_to_wishlist' data-id='${product._id}'><i class="lnr lnr-heart"></i></button>
                                         <a href="/product/${product.title}"><i class="lnr lnr-cart"></i></a>
                                     </div>
                                 </div>
@@ -178,6 +136,40 @@ class Shop {
                     localField: '_id',
                     foreignField: 'img_to',
                     as: 'images'
+                }
+                
+            },
+            {
+                $lookup: {
+                    from: 'wishlists',
+                    localField: '_id',
+                    foreignField: 'product',
+                    as: 'wishlist'
+                }
+            },
+
+            {
+                $project:
+                {
+                    colors: 1,
+                    sizes: 1,
+                    created_at: 1,
+                    title: 1,
+                    price: 1,
+                    quantity: 1,
+                    category: 1,
+                    brand: 1,
+                    description: 1,
+                    specifications: 1,
+                    images: '$images',
+                    wishlist:
+                    {
+                        $filter: {
+                            input: '$wishlist',
+                            as: 'wish',
+                            cond: { $eq: ['$$wish.author', mongoose.Types.ObjectId(req.session.userid)] }
+                        }
+                    }
                 }
             }
         ]).exec((err, resp) => {

@@ -145,16 +145,10 @@ $(document).ready(function () {
             success: (added) => {
                 if(added.action == 'create')
                 {
-                    let badge = btn.closest('.f_p_img').find('.wishlist_badge');
-                    console.log('created: ', badge)
-                        badge.addClass('in_wishlist').removeClass('wishlist_badge');
-                        badge.html('<i class="lnr lnr-heart"></i>')
+                  btn.addClass('bg-danger text-white');
                 } else if (added.action == 'remove')
                 {
-                    let badge = btn.closest('.f_p_img').find('.in_wishlist');
-                    console.log('removed: ', badge)
-                    badge.removeClass('in_wishlist').addClass('wishlist_badge');
-                    badge.html('')
+                    btn.removeClass('bg-danger text-white');
                 }else if(added.action == 'error' && added.msg == 'login'){
                     location.pathname = '/auth/login';
                 }else{

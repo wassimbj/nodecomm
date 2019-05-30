@@ -82,7 +82,11 @@
 						<hr>
 						<div class="card_area mt-5">
 							<button type='button' class="main_btn add_to_cart">Add to Cart</button>
-							<button type='button' class="btn icon_btn"><i class="lnr lnr lnr-heart"></i></button>
+							@if(product.wishlist.length > 0)
+								<button type='button' data-id='{{product._id}}' class="btn icon_btn add_to_wishlist bg-danger text-white"><i class="lnr lnr lnr-heart"></i></button>
+							@else
+								<button type='button' data-id='{{product._id}}' class="btn icon_btn add_to_wishlist"><i class="lnr lnr lnr-heart"></i></button>
+							@endif
 						</div>
 						<div id="error-msg"></div>
 					</form>
