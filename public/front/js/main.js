@@ -5,7 +5,7 @@ $(document).ready(function () {
 				 	<small class='mt-2 text-muted'> Please wait... </small>
 				 </div>`;
 
-    // ################ add product to cart ################
+// ##################### add product to cart #####################
     $(document).on('click', '.add_to_cart', function(e){
         e.preventDefault();
         let product = $('input[name="product"]').val(),
@@ -33,14 +33,14 @@ $(document).ready(function () {
                 else if(data.type == 'success'){
                     $('#error-msg').html(`<div class='alert alert-success mt-2'> ${data.msg} </div>`)
                 }else{
-                    location.pathname = '/login';
+                    location.pathname = '/auth/login';
                 }
             }
         });
     });
     // end of add to cart function
 
-    // ################ Filter products ###################
+// ###################### Filter products #########################
     filter_products()
     function filter_products()
     {
@@ -104,21 +104,7 @@ $(document).ready(function () {
         " - $" + $("#slider-range").slider("values", 1));
 
 
-    // Pagination
-    // add_active_to_link('1')
-    // function add_active_to_link(link)
-    // {
-    //     const pageLink = $('.page-item[data-page="' + link + '"]');
-    //     pageLink.addClass('active').siblings().removeClass('active');
-    //     pageLink.attr('disabled', true).siblings().attr('disabled', false);
-    //     // pageLink.a
-    // }
-
-    // function disable_btn(btn) {
-    //     const pageLink = btn;
-    //     pageLink.attr('disabled', true).siblings().attr('disabled', false);
-    // }
-
+// ####################### Pagination ########################
     var page = 1;
     $('.page-item').on('click', function(){
         // let page = $(this).data('page');
@@ -148,7 +134,34 @@ $(document).ready(function () {
         });
     });
 
-    // Add to wishlist
-        // NEXT TIME ...
+// ################## Add to wishlist #################
+    $(document).on('click', '.add_to_wishlist', function(){
+        const product_id = $(this).data('id'),
+                btn = $(this);
+        $.ajax({
+            url: '/wishlist/add',
+            method: 'POST',
+            data: {product_id},
+            success: (added) => {
+                if(added.action == 'create')
+                {
+                    let badge = btn.closest('.f_p_img').find('.wishlist_badge');
+                    console.log('created: ', badge)
+                        badge.addClass('in_wishlist').removeClass('wishlist_badge');
+                        badge.html('<i class="lnr lnr-heart"></i>')
+                } else if (added.action == 'remove')
+                {
+                    let badge = btn.closest('.f_p_img').find('.in_wishlist');
+                    console.log('removed: ', badge)
+                    badge.removeClass('in_wishlist').addClass('wishlist_badge');
+                    badge.html('')
+                }else if(added.action == 'error' && added.msg == 'login'){
+                    location.pathname = '/auth/login';
+                }else{
+                    alert(added)
+                }
+            }
+        });
+    });
     
 }); // END OF jQuery

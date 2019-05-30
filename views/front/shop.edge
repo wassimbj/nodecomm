@@ -54,21 +54,7 @@
 					</div>
 					{{--  Product card  --}}
 					<div class="latest_product_inner row">
-						@each(product in products)
-						  <div class="col-lg-4 col-md-4 col-sm-6">
-							<div class="f_p_item">
-								<div class="f_p_img">
-									<img class="img-fluid" src="{{product.images[0].image}}" alt="">
-									<div class="p_icon">
-										<a href="#"><i class="lnr lnr-heart"></i></a>
-										<a href="/product/{{product.title}}"><i class="lnr lnr-cart"></i></a>
-									</div>
-								</div>
-								<a href="/product/{{product.title}}"><h4>{{product.title}}</h4></a>
-								<h5>${{product.price}}</h5>
-							</div>
-						</div>
-						@endeach
+						{{--  Display the products here  --}}
 					</div>
 				</div>
 

@@ -1,6 +1,8 @@
 "use strict";
 const Product = require('../database/models/Product');
 const Cart = require('../database/models/Cart');
+const WishlistModel = require('../database/models/Wishlist');
+const mongoose = require('mongoose');
 // $gt = Greater Then
 // $lt = Less Then
 // $gte = Greater Then Or Equal
@@ -49,7 +51,7 @@ class Shop {
     // Filter products
     filter(req, res)
     {
-        console.log('Skip = ', this.skip)
+        // console.log('Skip = ', this.skip)
         var options = { $match: {} },
             sort = {};
 
@@ -85,7 +87,8 @@ class Shop {
         // res.json(options)
         // res.json(req.body)
         // console.log(sort)
-        Product.aggregate([
+        const user_id = req.session.userid;
+       Product.aggregate([
             options,
             sort,
             {
@@ -96,27 +99,66 @@ class Shop {
                     as: 'images'
                 }
             },
+
+            {
+                $lookup: {
+                    from: 'wishlists',
+                    localField: '_id',
+                    foreignField: 'product',                  
+                    as: 'wishlist'
+                }
+            },
+
+           {
+               $project:
+               {
+                   colors: 1,
+                   sizes: 1,
+                   created_at: 1,
+                   title: 1,
+                   price: 1,
+                   quantity: 1,
+                   category: 1,
+                   brand: 1,
+                   description:1,
+                   specifications: 1,
+                   images: '$images',
+                   wishlist:
+                   {
+                       $filter: { 
+                          input: '$wishlist',
+                          as: 'wish',
+                           cond: { $eq: ['$$wish.author', mongoose.Types.ObjectId(user_id)]}
+                        }
+                   }
+               }
+           },
+         
             {$skip: this.skip},
             {$limit: this.perpage}
         ]).exec((err, products) => {
             // console.log(options)
             var output = '';
             products.map(product => {
-                output += `
-                    <div class="col-lg-4 col-md-4 col-sm-6" >
-                        <div class="f_p_item">
-                            <div class="f_p_img">
-                                <img class="img-fluid" src="${product.images[0].image}" alt="">
-                                <div class="p_icon">
-                                    <a><i class="lnr lnr-heart"></i></a>
-                                    <a href="/product/${product.title}"><i class="lnr lnr-cart"></i></a>
+                output += `<div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="f_p_item">
+                                <div class="f_p_img">
+                                ${
+                                    product.wishlist.length > 0 ?
+                                        `<div class='in_wishlist'> <i class="lnr lnr-heart"></i> </div>`
+                                    :
+                                        `<div class='wishlist_badge'>  </div>`
+                                }
+                                    <img class="img-fluid" src="${product.images[0].image}" alt="">
+                                    <div class="p_icon">
+                                        <button class='add_to_wishlist' data-id='${product._id}'><i class="lnr lnr-heart"></i></button>
+                                        <a href="/product/${product.title}"><i class="lnr lnr-cart"></i></a>
+                                    </div>
                                 </div>
+                                <a href="/product/${product.title}"><h4>${product.title}</h4></a>
+                                <h5>${product.price}</h5>
                             </div>
-                            <a href="/product/${product.title}"><h4>${ product.title }</h4></a>
-                            <h5>${product.price}</h5>
-                        </div>
-                    </div>
-                `
+                        </div>`
             });
 
             res.json(output);

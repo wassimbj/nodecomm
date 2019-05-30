@@ -65,6 +65,8 @@ const ProductImage = require('./database/models/ProductImage');
 const HomeController = require('./controllers/HomeController');
 const ShopController = require('./controllers/ShopController');
 const AdminController = require('./controllers/AdminController');
+const WishlistController = require('./controllers/WishlistController');
+
 // const UserController = require('./controllers/UserController');
 // const CartController = require('./controllers/CartController');
 // const ShippingController = require('./controllers/ShippingController');
@@ -75,6 +77,7 @@ const userAuth = require('./routes/auth');
 const userCart = require('./routes/cart');
 const userShip = require('./routes/ship');
 const userCheckout = require('./routes/checkout');
+const mainShop = require('./routes/shop')
 
 // ############### Front ##################
 app.use('*', (req, res, next) => {
@@ -84,13 +87,14 @@ app.use('*', (req, res, next) => {
 
 app.get('/', HomeController.index);
 
-app.get('/shop', ShopController.index.bind(ShopController));
+// Main shop
+app.use('/shop', mainShop)
 
-app.post('/shop', ShopController.filter.bind(ShopController));
-
-app.post('/shop/page', ShopController.page.bind(ShopController));
-
+// get single product
 app.get('/product/:name', ShopController.single)
+
+// add to wishlist
+app.post('/wishlist/add', WishlistController.create)
 
 // User auth
 app.use('/auth', userAuth);
