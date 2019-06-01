@@ -1,15 +1,11 @@
-const Product = require('../database/models/Product');
-const ProductImage = require('../database/models/ProductImage');
+const Product = require('../../database/models/Product');
+const ProductImage = require('../../database/models/ProductImage');
 
 class Admin {
 
-    index(req, res) {
-        res.render('back.dashboard');
-    }
-
     // Show create views
     create(req, res){
-        const msgType = req.flash('msgType'),
+        var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
         return res.render('back.productCreate', {msgType, msg});
     }
@@ -38,12 +34,12 @@ class Admin {
                 });
                 req.flash('success', 'Yayy! the product was created'),
                 req.flash('msgType', 'success');
-                return res.redirect('/admin/create');
+                return res.redirect('back');
             }else {
                 const error = Object.keys(err.errors).map(key => err.errors[key].message);
                 req.flash('danger', error)
                 req.flash('msgType', 'danger');
-                return res.redirect('/admin/create');
+                return res.redirect('back');
             }
         });
     }

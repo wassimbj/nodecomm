@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/UserController');
+const UserController = require('../../controllers/front/UserController');
 
 router.get('/register', UserController.redirectIfAuth, UserController.register);
 

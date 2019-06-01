@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Melody Admin</title>
   <!-- plugins:css -->
+  {{--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  --}}
   <link rel="stylesheet" href="/back/vendors/iconfonts/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="/back/vendors/css/vendor.bundle.base.css">
   <link rel="stylesheet" href="/back/vendors/css/vendor.bundle.addons.css">
@@ -48,7 +49,7 @@
         </ul>
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item d-none d-lg-flex">
-            <a class="nav-link" href="/admin/create">
+            <a class="nav-link" href="/admin/product/create">
               <span class="btn btn-primary"> + Create new </span>
             </a>
           </li>
@@ -236,6 +237,19 @@
               <i class="fa fa-home menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#cates" aria-expanded="false" aria-controls="cates">
+              <i class="fas fa-window-restore menu-icon"></i>
+              <span class="menu-title">Categories & Sub</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="cates">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/admin/category"> Categories & Sub </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/category/create"> Create & edit </a></li>
+              </ul>
+            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="pages/ui-features/popups.html">

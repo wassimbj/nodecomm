@@ -1,11 +1,11 @@
-const CartModel = require('../database/models/Cart');
-const Product = require('../database/models/Product');
-const ProductImage = require('../database/models/ProductImage');
+const CartModel = require('../../database/models/Cart');
+const Product = require('../../database/models/Product');
+const ProductImage = require('../../database/models/ProductImage');
 class Cart{
 
     async index(req, res)
     {
-        const msgType = req.flash('msgType'),
+        var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
         await CartModel.find({author: req.session.userid, paid: 0})
                 .populate('product')
@@ -112,7 +112,6 @@ class Cart{
         return res.redirect('/user/cart');
     });
     }
-
 }
 
 module.exports = new Cart();

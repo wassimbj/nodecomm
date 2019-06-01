@@ -20666,17 +20666,6 @@ code {
   border: 0;
 }
 
-.accordion .card .card-header {
-  background-color: transparent;
-  border: none;
-  padding: 2rem;
-}
-
-.accordion .card .card-header * {
-  font-weight: 400;
-  font-size: 1rem;
-}
-
 .accordion .card .card-header a {
   display: block;
   color: inherit;

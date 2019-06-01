@@ -1,19 +1,18 @@
-const UserModel = require('../database/models/User');
+const UserModel = require('../../database/models/User');
 const bcrypt = require('bcrypt');
 
 class User {
     register(req, res) {
-        const msg = req.flash('success')[0] || req.flash('errors'),
-             msgType = req.flash('msgType');
+        var msgType = req.flash('msgType'),
+            msg = req.flash(msgType);
         return res.render('front.register', {
-            msgType: msgType,
-            msg: msg,
+            msgType, msg,
             data: req.flash('data')[0]
         });
     }
 
     login(req, res) {
-        const msgType = req.flash('msgType'),
+        var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
         return res.render('front.login', {
             msgType, msg,
@@ -65,7 +64,7 @@ class User {
                 }else{
                     req.flash('danger', 'Oops ! Wrong password');
                     req.flash('msgType', 'danger');
-                    return req.redirect('/auth/login');
+                    return res.redirect('/auth/login');
                 }
               });
           }else{

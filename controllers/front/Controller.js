@@ -1,6 +1,6 @@
-const Ship = require('../database/models/Shipping');
-const Cart = require('../database/models/Cart');
-const User = require('../database/models/User');
+const Ship = require('../../database/models/Shipping');
+const Cart = require('../../database/models/Cart');
+const User = require('../../database/models/User');
 
 // cb = Call Back
 

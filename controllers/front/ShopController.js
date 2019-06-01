@@ -1,7 +1,7 @@
 "use strict";
-const Product = require('../database/models/Product');
-const Cart = require('../database/models/Cart');
-const WishlistModel = require('../database/models/Wishlist');
+const Product = require('../../database/models/Product');
+const Cart = require('../../database/models/Cart');
+const WishlistModel = require('../../database/models/Wishlist');
 const mongoose = require('mongoose');
 // $gt = Greater Then
 // $lt = Less Then
@@ -124,8 +124,6 @@ class Shop {
 
     }
 
-
-
     // Single product
     single(req, res){
         Product.aggregate([
@@ -147,7 +145,6 @@ class Shop {
                     as: 'wishlist'
                 }
             },
-
             {
                 $project:
                 {
@@ -175,6 +172,7 @@ class Shop {
         ]).exec((err, resp) => {
             const msgType = req.flash('msgType'),
                 msg = req.flash(msgType)
+                // console.log(resp)
             return res.render('front.single-product', {
                 msg,
                 msgType,

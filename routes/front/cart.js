@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/UserController');
-const CartController = require('../controllers/CartController');
+const UserController = require('../../controllers/front/UserController');
+const CartController = require('../../controllers/front/CartController');
 
 router.get('/cart', UserController.auth, CartController.index);
 

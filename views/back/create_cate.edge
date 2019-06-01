@@ -1,0 +1,37 @@
+@layout('layouts.back')
+
+@section('admin')
+    <div class="container">
+        <h1 class='text-center p-2'> Create Categories & Sub-categories </h1>
+        
+        @include('layouts.flash-msg')
+        <form class="forms-sample" method="POST" action='/admin/category/create'>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name='name' placeholder="Category or sub-category name">
+            </div>
+            <div class="form-group">
+                <label> Category parent ? </label>
+                <select class="form-control form-control-lg" name='parent'>
+                    <option value="main"> This is a main Category </option>
+                    @if(cates)
+                        @each(cate in cates)
+                            <option value="{{cate._id}}"> {{cate.name}} </option>
+                        @endeach
+                    @else
+                        <option disabled> There is no main category to choose </option>
+                    @endif
+                </select>
+            </div>
+            <div class="form-group">
+                <label> Appearance </label>
+                <select class="form-control form-control-lg" name='appear'>
+                    <option value='1'>Let it appear in the the nav-bar</option>
+                    <option value='0'> No, i dont want it to appear </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success mr-2 mt-5 w-100"> Create </button>
+        </form>
+    </div>
+@endsection

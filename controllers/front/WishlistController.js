@@ -1,5 +1,5 @@
-const WishlistModel = require('../database/models/Wishlist');
-const Product = require('../database/models/Product');
+const WishlistModel = require('../../database/models/Wishlist');
+const Product = require('../../database/models/Product');
 
 class Wishlist {
     

@@ -32,6 +32,7 @@ $(document).ready(function () {
                     $('#error-msg').html(`<div class='text-danger mt-2'> ${data.msg} </div>`)
                 else if(data.type == 'success'){
                     $('#error-msg').html(`<div class='alert alert-success mt-2'> ${data.msg} </div>`)
+                    $('.nav-item .cart').addClass('cart_is_filled')
                 }else{
                     location.pathname = '/auth/login';
                 }

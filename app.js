@@ -11,8 +11,6 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo')(session);
 
-// var braintree = require('braintree');
-// var router = express.Router(); // eslint-disable-line new-cap
 const gateway = require('./lib/gateway');
 
 const app = new express();
@@ -58,30 +56,41 @@ const storage = cloudinaryStorage({
 const imgparser = multer({storage: storage});
 
 //######################## Bring all models #########################
-const Product = require('./database/models/Product');
-const ProductImage = require('./database/models/ProductImage');
+const Cart = require('./database/models/Cart');
+
 
 //######################## Bring all Controllers #########################
-const HomeController = require('./controllers/HomeController');
-const ShopController = require('./controllers/ShopController');
-const AdminController = require('./controllers/AdminController');
-const WishlistController = require('./controllers/WishlistController');
+// Front (or user)
+const HomeController = require('./controllers/front/HomeController');
+const ShopController = require('./controllers/front/ShopController');
+const WishlistController = require('./controllers/front/WishlistController');
+
+// Back (or Admin)
+const AdminHomeController = require('./controllers/back/AdminHomeController');
 
 // const UserController = require('./controllers/UserController');
 // const CartController = require('./controllers/CartController');
 // const ShippingController = require('./controllers/ShippingController');
 // const CheckoutController = require('./controllers/CheckoutController');
-
 //######################## Bring all Routes #########################
-const userAuth = require('./routes/auth');
-const userCart = require('./routes/cart');
-const userShip = require('./routes/ship');
-const userCheckout = require('./routes/checkout');
-const mainShop = require('./routes/shop')
+// Front
+const userAuth = require('./routes/front/auth');
+const userCart = require('./routes/front/cart');
+const userShip = require('./routes/front/ship');
+const userCheckout = require('./routes/front/checkout');
+const mainShop = require('./routes/front/shop')
+
+// Back 
+const adminProducts = require('./routes/back/products')
+const cate = require('./routes/back/category')
+
 
 // ############### Front ##################
 app.use('*', (req, res, next) => {
     edge.global('auth', req.session.userid);
+    Cart.countDocuments({ author: req.session.userid, paid: 0}).exec((err, items_in_cart) => {
+        edge.global('items_in_cart', items_in_cart);
+    })
     next();
 });
 
@@ -111,12 +120,11 @@ app.use('/user/checkout', userCheckout)
 
 // ############### Back (Admin) ##################
 
-app.get('/admin', AdminController.index);
+app.get('/admin', AdminHomeController.index);
 
-app.get('/admin/create', AdminController.create);
+app.use('/admin/product', adminProducts)
 
-app.post('/admin/create', imgparser.array('img', 5), AdminController.store);
-
+app.use('/admin/category', cate)
 
 
 

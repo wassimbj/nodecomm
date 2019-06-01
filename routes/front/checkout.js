@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const CheckoutController = require('../controllers/CheckoutController');
+const CheckoutController = require('../../controllers/front/CheckoutController');
 
 // Main Route is "/user/checkout"
 

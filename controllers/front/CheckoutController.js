@@ -1,11 +1,11 @@
 'use strict';
-const Order = require('../database/models/Order');
-const Cart = require('../database/models/Cart');
-const Shipping = require('../database/models/Shipping');
+const Order = require('../../database/models/Order');
+const Cart = require('../../database/models/Cart');
+const Shipping = require('../../database/models/Shipping');
 
 const braintree = require('braintree');
-const gateway = require('../lib/gateway');
-const Controller = require('../controllers/Controller');
+const gateway = require('../../lib/gateway');
+const Controller = require('../../controllers/front/Controller');
 
 class Checkout extends Controller{
     constructor()
@@ -42,7 +42,7 @@ class Checkout extends Controller{
     async index(req, res) {
         // console.log(this)
         await gateway.clientToken.generate({}, (err, response) => {
-            const msgType = req.flash('msgType'),
+            var msgType = req.flash('msgType'),
                 msg = req.flash(msgType);
             // Init the amount to pay
             Cart.find({ author: req.session.userid }, (err, cart) => {

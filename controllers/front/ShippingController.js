@@ -1,7 +1,7 @@
-const Ship = require('../database/models/Shipping');
-// const Order = require('../database/models/Order');
-const UserModel = require('../database/models/User');
-const Controller = require('../controllers/Controller');
+const Ship = require('../../database/models/Shipping');
+// const Order = require('../../database/models/Order');
+const UserModel = require('../../database/models/User');
+const Controller = require('../../controllers/front/Controller');
 
 class Shipping extends Controller{
     constructor() {
@@ -12,7 +12,7 @@ class Shipping extends Controller{
     index(req, res) {
         super.cart_is_empty(req.session.userid, function(empty){
             if (!empty) {
-                const msgType = req.flash('msgType'),
+                var msgType = req.flash('msgType'),
                     msg = req.flash(msgType),
                     data = req.flash('data');
                 Ship.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
