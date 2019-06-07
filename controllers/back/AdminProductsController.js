@@ -12,17 +12,19 @@ class Admin {
 
     // Store the product in the DB
     store(req, res){
-        const pImages = req.files;
+        const pImages = req.files,
+              {name, price, qty, category, brand, colors, sizes, desc, spec} = req.body;
         Product.create({
-            title: req.body.name,
-            price: req.body.price,
-            quantity: req.body.qty,
-            category: req.body.category,
-            brand: req.body.brand,
-            colors: req.body.colors.split(','),
-            sizes: req.body.sizes.split(','),
-            description: req.body.desc,
-            specifications: req.body.spec
+            title: name,
+            price: price,
+            original_price: price,
+            quantity: qty,
+            category: category,
+            brand: brand,
+            colors: colors.split(','),
+            sizes: sizes.split(','),
+            description: desc,
+            specifications: spec
         }, (err, result) => {
             if (!err) {
                 pImages.forEach(elem => {

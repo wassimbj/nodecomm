@@ -1,0 +1,31 @@
+@layout('layouts.back')
+
+@section('admin')
+
+    <div class="container">
+        <h1 class='text-center'> Create brands </h1>
+        <div class="card-body">
+            @include('layouts.flash-msg')
+            <form class="cmxform" method="post" action="/admin/brands/create" enctype="multipart/form-data">
+                <fieldset>
+                    <div class="form-group">
+                        <label> Brand image (if you have) </label>
+                         <input type="file" class="dropify" name='image'>
+                    </div>
+                    <div class="form-group">
+                        <label>Brand name (required)</label>
+                        <input class="form-control" type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ccomment"> Do you want this brand to appear on the homepage ? </label>
+                        <select class="custom-select" name='appear'>
+                            <option value="1" selected> Yes, i want it to appear </option>
+                            <option value="0"> No i dont want </option>
+                        </select>
+                    </div>
+                    <button class='btn btn-success w-100' type='submit'> Create brand </button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+@endsection

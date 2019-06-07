@@ -82,7 +82,10 @@ const mainShop = require('./routes/front/shop')
 
 // Back 
 const adminProducts = require('./routes/back/products')
-const cate = require('./routes/back/category')
+const AdminCate = require('./routes/back/category')
+const AdminBrands = require('./routes/back/brands')
+const AdminOrders = require('./routes/back/orders')
+const AdminDiscounts = require('./routes/back/discounts')
 
 
 // ############### Front ##################
@@ -124,8 +127,13 @@ app.get('/admin', AdminHomeController.index);
 
 app.use('/admin/product', adminProducts)
 
-app.use('/admin/category', cate)
+app.use('/admin/category', AdminCate)
 
+app.use('/admin/brands', AdminBrands)
+
+app.use('/admin/orders', AdminOrders)
+
+app.use('/admin/discounts', AdminDiscounts)
 
 
 

@@ -1,0 +1,92 @@
+@layout('layouts.back')
+
+@section('admin')
+
+<div class="container">
+    <h1 class='text-center'> See & edit brands </h1>
+    <div class="card-body">
+        @include('layouts.flash-msg')
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th> Brand name </th>
+                        <th> Image </th>
+                        <th> Appearance </th>
+                        <th> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if(brands.length > 0)
+                        @each(brand in brands)
+                        <tr>
+                            <td> <h5>{{brand.name}}</h5> </td>
+                            <td> <img src='{{brand.image}}'> </td>
+                            <td> {{brand.appear == 1 ? 'Yes' : 'No'}} </td>
+                            <td>
+                                <button class='btn btn-sm btn-primary' data-toggle="modal"
+                                    data-target='#edit_{{brand._id}}'> Edit
+                                </button>
+                                <a href='/admin/brands/delete/{{brand._id}}' class='btn btn-sm btn-danger'> Delete </a>
+                            </td>
+                            <td>
+                                {{--  EDIT MODAL  --}}
+                                <div class="modal fade" id="edit_{{brand._id}}">
+
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="ModalLabel"> Brand: <mark> Nike </mark> </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <form method="POST" action='/admin/brands/edit' enctype="multipart/form-data">
+                                                <input type="hidden" name='brand_id' value="{{brand._id}}">
+                                                <input type="hidden" name='img_id' value="{{brand.img_id}}">
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <input type="file" class="dropify" name='new_image'
+                                                            data-default-file="{{brand.image}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-form-label"> Brand name </label>
+                                                        <input type="text" class="form-control" name='name' value="{{brand.name}}"
+                                                            required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-form-label"> Do you want it to appear in the homepage ?
+                                                        </label>
+                                                        <select class="custom-select" name="appear">
+                                                            <option value="0"> No i dont want </option>
+                                                            <option value="1"> Yes, i want it to appear </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success"> Save changes </button>
+                                                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    document.querySelector('#edit_{{brand._id}} select option[value="{{brand.appear}}"]')
+                                                .setAttribute('selected', true);
+                                </script>
+                            </td>
+                        </tr>
+                        
+                        @endeach
+                    @else
+                       <h5> No brand was created yet... </h5>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection

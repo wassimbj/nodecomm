@@ -6,7 +6,7 @@ const CheckoutController = require('../../controllers/front/CheckoutController')
 
 router.get('/', CheckoutController.middlware, CheckoutController.index.bind(CheckoutController));
 
-router.get('/:id', CheckoutController.middlware, CheckoutController.transaction);
+router.get('/:id', CheckoutController.middlware, CheckoutController.transaction.bind(CheckoutController));
 
 router.post('/', CheckoutController.middlware, CheckoutController.pay.bind(CheckoutController));
 

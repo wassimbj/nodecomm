@@ -9,6 +9,7 @@ const orderSchema = new Schema({
     paid_at: Date,
     method: String,
     ship_to: { type: Schema.Types.ObjectId, ref: 'Shipping' },
+    delivered: {type: Boolean, default: false},
     created_at: { type: Date, default: new Date() }
 });
 

@@ -1,0 +1,69 @@
+@layout('layouts.back')
+
+
+@section('admin')
+<div class="container">
+    <h1 class='text-center mb-4'> Orders </h1>
+    <div id="js-grid-static" class="jsgrid" style="position: relative; height: 500px; width: 100%;">
+        <div class="jsgrid-grid-header jsgrid-header-scrollbar">
+            <table class="jsgrid-table">
+                <tr class="jsgrid-header-row">
+                    <th class="jsgrid-header-cell jsgrid-header-sortable">ID</th>
+                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable">Ordered by</th>
+                    <th class="jsgrid-header-cell jsgrid-header-sortable"> Method </th>
+                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable"> Total
+                    </th>
+                    <th class="jsgrid-header-cell jsgrid-header-sortable"> Created at </th>
+                    <th class="jsgrid-header-cell jsgrid-header-sortable"> Paid at </th>
+                    <th class="jsgrid-header-cell jsgrid-header-sortable">Delivered</th>
+                </tr>
+                
+            </table>
+        </div>
+        <div class="jsgrid-grid-body" style="height: 378.625px;">
+            <table class="jsgrid-table">
+                <tbody>
+                   @if(orders)
+                     @each(order in orders)
+                         <tr class="jsgrid-row">
+                            <td class="jsgrid-cell"> <a href="/admin/orders/{{order._id}}"> #{{order._id.toString().substring(0, 7)}}... </a> </td>
+                            <td class="jsgrid-cell"> {{order.customer[0].firstname+' '+order.customer[0].lastname}} </td>
+                            <td class="jsgrid-cell"> {{order.method}} </td>
+                            <td class="jsgrid-cell jsgrid-align-center"> ${{order.total}} </td>
+                            <td class="jsgrid-cell jsgrid-align-center" id='inv_date_{{$loop.index}}'> </td>
+                            <td class="jsgrid-cell jsgrid-align-center" id='due_date_{{$loop.index}}'> </td>
+                            <td class="jsgrid-cell">
+                                <div class="form-check mt-0">
+                                    <label class="form-check-label">
+                                            @if(order.delivered == 1)
+                                                <input type="checkbox" name='status' data-orderid='{{order._id}}' class="form-check-input order_status" checked>
+                                            @else
+                                                <input type="checkbox" name='status' data-orderid='{{order._id}}' class="form-check-input order_status">
+                                            @endif
+                                        <i class="input-helper"></i>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <script>
+                            // moment(new Date('{{order.created_at}}')).format('YYYY-MM-DD hh:mm a')
+                            document.getElementById('inv_date_{{$loop.index}}')
+                                    .innerHTML = moment(new Date('{{order.created_at}}')).format('YYYY-MM-DD hh:mm a');
+                            document.getElementById('due_date_{{$loop.index}}')
+                                    .innerHTML = moment(new Date('{{order.paid_at}}')).format('YYYY-MM-DD hh:mm a');
+                        </script> 
+                     @endeach
+                   @endif
+                </tbody>
+            </table>
+        </div>
+        <!--  <div class="jsgrid-pager-container">
+            <div class="jsgrid-pager">Pages: <span class="jsgrid-pager-nav-button"></div>
+        </div>  -->
+        <div class="jsgrid-load-shader"
+            style="display: none; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 1000;"></div>
+        <div class="jsgrid-load-panel" style="display: none; position: absolute; top: 50%; left: 50%; z-index: 1000;">
+            Please, wait...</div>
+    </div>
+</div>
+@endsection

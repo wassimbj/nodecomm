@@ -116,7 +116,7 @@ class Checkout extends Controller{
                 submitForSettlement: true
             }
         }, (err, result) => {
-            if (result.success || result.transaction) {
+            if (!err && (result.success || result.transaction)) {
                 const method = result.transaction.creditCard.cardType,
                     paid_at = result.transaction.createdAt;
                 super.order_details(req.session.userid, (orders, total) => {

@@ -20,6 +20,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="/back/css/style.css">
   <!-- endinject -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 </head>
 <body>
   <div class="container-scroller">
@@ -232,55 +233,78 @@
               </div>
             </div>
           </li>
+
           <li class="nav-item">
             <a class="nav-link" href="/admin">
               <i class="fa fa-home menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#cates" aria-expanded="false" aria-controls="cates">
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#cates" aria-expanded="false">
+              <i class="fas fa-boxes menu-icon"></i>
+              <span class="menu-title"> Products </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="cates">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/admin/product"> See & edit </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/product/create"> Create </a></li>
+              </ul>
+            </div>
+          </li> 
+
+         <li class="nav-item">
+            <a class="nav-link" href="/admin/orders">
+              <i class="fas fa-dolly menu-icon"></i>
+              <span class="menu-title"> Orders </span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#brands" aria-expanded="false">
+              <i class="fas fa-percent menu-icon"></i>
+              <span class="menu-title"> Discounts </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="brands">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/admin/discounts"> See & edit </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/discounts/create"> Create </a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#brands" aria-expanded="false">
+              <i class="fas fa-window-restore menu-icon"></i>
+              <span class="menu-title">Brands</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="brands">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/admin/brands"> See & edit </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/brands/create"> Create </a></li>
+              </ul>
+            </div>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#cates" aria-expanded="false">
               <i class="fas fa-window-restore menu-icon"></i>
               <span class="menu-title">Categories & Sub</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="cates">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="/admin/category"> Categories & Sub </a></li>
-                <li class="nav-item"> <a class="nav-link" href="/admin/category/create"> Create & edit </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/category"> See & edit </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/admin/category/create"> Create </a></li>
               </ul>
             </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/ui-features/popups.html">
-              <i class="fas fa-minus-square menu-icon"></i>
-              <span class="menu-title">Popups</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/ui-features/notifications.html">
-              <i class="fas fa-bell menu-icon"></i>
-              <span class="menu-title">Notifications</span>
-            </a>
-          </li>
-          {{--  Collapse  --}}
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-              <i class="fas fa-window-restore menu-icon"></i>
-              <span class="menu-title">User Pages</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="auth">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html"> Login 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/register-2.html"> Register 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/lock-screen.html"> Lockscreen </a></li>
-              </ul>
-            </div>
-          </li>
-          {{--  Collapse  --}}
+          </li> 
+         
+          
         </ul>
       </nav>
 
@@ -298,9 +322,12 @@
   <script src="/back/js/hoverable-collapse.js"></script>
   <script src="/back/js/misc.js"></script>
   <script src="/back/js/settings.js"></script>
+  <script src="/back/js/form-validation.js"></script>
   <script src="/back/js/todolist.js"></script>
   <script src="/back/js/custom.js"></script>
   <script src="/back/js/dashboard.js"></script>
+  <script src='/back/js/dropify.js'></script>
+
   @!section('js')
 </body>
 

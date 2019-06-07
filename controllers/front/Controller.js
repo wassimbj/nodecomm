@@ -1,7 +1,7 @@
 const Ship = require('../../database/models/Shipping');
 const Cart = require('../../database/models/Cart');
 const User = require('../../database/models/User');
-
+const mongoose = require('mongoose')
 // cb = Call Back
 
 class Controller {
@@ -25,7 +25,7 @@ class Controller {
             total = 0;
        await Cart.find({author: user_id, paid: 0}, (err, cart) => {
            cart.map(item => {
-               order_ids.push(item.id);
+               order_ids.push(mongoose.Types.ObjectId(item.id));
                total = total + item.total;
            });
         });

@@ -20325,8 +20325,8 @@ code {
 }
 
 .img-lg {
-  width: 92px;
-  height: 92px;
+  width: 92px !important;
+  height: 92px !important;
 }
 
 .img-sm {
@@ -27545,6 +27545,8 @@ body.avgrund-active {
 .jsgrid .jsgrid-button {
   background-image: url(../images/sprites/jsgrid-icons.png);
 }
+
+.jsgrid-cell{word-break: break-word}
 
 .jsgrid .jsgrid-grid-header {
   border: 1px solid #e0e0ef;
