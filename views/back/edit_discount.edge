@@ -2,25 +2,28 @@
 
 @section('admin')
 <div class="container">
-    <h1 class="text-center p-3"> Create a discount </h1>
+    <h1 class="text-center p-3"> Update the discount ! </h1>
 
     @include('layouts.flash-msg')
 
-    <form action="/admin/discounts/create" method="POST">
+    <form action="/admin/discounts/update" method="POST">
+        <input type="hidden" name='id' value="{{products[0].discount[0]._id}}">
         <div class="form-group">
             <label> Discount amount </label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
                 </div>
-                <input type="number" class="form-control" autocomplete="off" placeholder="Discount amount" name="discount">
+                <input type="number" class="form-control" autocomplete="off" placeholder="Discount amount" name="discount"
+                    value="{{products[0].discount[0].discount}}">
             </div>
         </div>
 
         <div class="form-group">
             <label> Choose the expiration date </label>
             <div id="datepicker-popup" class="input-group date datepicker">
-                <input type="text" class="form-control" autocomplete="off" placeholder="Expiration date" name='expire'>
+                <input type="text" class="form-control" autocomplete="off" placeholder="Expiration date" name='expire' 
+                    value="{{products[0].discount[0].expire.toString().substring(0, 15)}}">
                 <span class="input-group-addon input-group-append border-left">
                     <span class="far fa-calendar input-group-text"></span>
                 </span>
@@ -31,14 +34,15 @@
             <label> Choose the products that you want the discount to be applied to ! </label>
             <div class="card p-3 d-block">
                 <h4 class="card-title">
-                    Products ({{products.length}})
+                   products ({{products.length}})
                 </h4>
+                <p> Those are the products that the discount was applied on ! </p>
 
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th> # </th>
+                                <th class="text-danger"> Delete </th>
                                 <th> Image </th>
                                 <th> Title </th>
                                 <th> Original price </th>
@@ -89,12 +93,12 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 p-3 mb-5"> Create </button>
+        <button type="submit" class="btn btn-primary w-100 p-3 mb-5"> Save changes </button>
     </form>
 
 </div>
 @endsection
 
 @section('js')
-<script src="/back/js/formpickers.js" type="text/javascript"></script>
+    <script src="/back/js/formpickers.js" type="text/javascript"></script>
 @endsection

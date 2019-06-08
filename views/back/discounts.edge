@@ -1,0 +1,53 @@
+@layout('layouts.back')
+
+@section('admin')
+    <div class="container">
+        <h1 class="text-center mb-3 p-3"> See & update discounts </h1>
+        
+        @include('layouts.flash-msg')
+
+        <div class="form-group">
+            <div class="card p-3 d-block">
+                <h4 class="card-title">
+                   Discounts
+                </h4>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th> # </th>
+                                <th> Discount amount </th>
+                                <th> Expire in </th>
+                                <th> Applied on (products) </th>
+                                <th> Created at </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(discounts.length > 0)
+                                @each(discount in discounts)
+                                    <tr>
+                                        <td> {{$loop.index + 1}} </td>
+                                        <td>
+                                            <label class="badge badge-success badge-pill"> %{{discount.discount}} </label>
+                                        </td>
+                                        <td>{{discount.expire.toString().substring(0, 16)}}</td>
+                                        <td class="font-weight-bold"> {{discount.products.length}}</td>
+                                        <td>{{discount.created_at.toString().substring(0, 16)}}</td>
+                                        <td>
+                                            <a href='/admin/discounts/{{discount._id}}/edit' class='btn btn-sm btn-primary'> edit </a>
+                                            <a href='/admin/discounts/{{discount._id}}/delete' class='btn btn-sm btn-danger'> delete </a>
+                                        </td>
+                                    </tr>
+                                @endeach
+                            @else
+                                <p> There is no discount yet... </p>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
