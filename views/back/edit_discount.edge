@@ -6,95 +6,101 @@
 
     @include('layouts.flash-msg')
 
-    <form action="/admin/discounts/update" method="POST">
-        <input type="hidden" name='id' value="{{products[0].discount[0]._id}}">
-        <div class="form-group">
-            <label> Discount amount </label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-percent"></i></span>
+    @if(products.length > 0)
+        <form action="/admin/discounts/update" method="POST">
+            <input type="hidden" name='id' value="{{products[0].discount[0]._id}}">
+            <div class="form-group">
+                <label> Discount amount </label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                    </div>
+                    <input type="number" class="form-control" autocomplete="off" placeholder="Discount amount" name="discount"
+                        value="{{products[0].discount[0].discount}}">
                 </div>
-                <input type="number" class="form-control" autocomplete="off" placeholder="Discount amount" name="discount"
-                    value="{{products[0].discount[0].discount}}">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label> Choose the expiration date </label>
-            <div id="datepicker-popup" class="input-group date datepicker">
-                <input type="text" class="form-control" autocomplete="off" placeholder="Expiration date" name='expire' 
-                    value="{{products[0].discount[0].expire.toString().substring(0, 15)}}">
-                <span class="input-group-addon input-group-append border-left">
-                    <span class="far fa-calendar input-group-text"></span>
-                </span>
+            <div class="form-group">
+                <label> Choose the expiration date </label>
+                <div id="datepicker-popup" class="input-group date datepicker">
+                    <input type="text" class="form-control" autocomplete="off" placeholder="Expiration date" name='expire' 
+                        value="{{products[0].discount[0].expire.toString().substring(0, 15)}}">
+                    <span class="input-group-addon input-group-append border-left">
+                        <span class="far fa-calendar input-group-text"></span>
+                    </span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label> Choose the products that you want the discount to be applied to ! </label>
-            <div class="card p-3 d-block">
-                <h4 class="card-title">
-                   products ({{products.length}})
-                </h4>
-                <p> Those are the products that the discount was applied on ! </p>
+            <div class="form-group">
+                <label> Choose the products that you want the discount to be applied to ! </label>
+                <div class="card p-3 d-block">
+                    <h4 class="card-title">
+                    products ({{products.length}})
+                    </h4>
+                    <p> Those are the products that the discount was applied on ! </p>
 
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="text-danger"> Delete </th>
-                                <th> Image </th>
-                                <th> Title </th>
-                                <th> Original price </th>
-                                <th> Discount amount </th>
-                                <th> New price (after discount) </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @each(product in products)
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" name="products" value="{{product._id}}">
-                                            <i class="input-helper"></i></label>
-                                    </div>
-                                </td>
-                                <td class="py-1">
-                                    <img src="{{product.images[0].image}}" alt="product image" class="img-lg">
-                                </td>
-                                <td class="font-weight-bold">
-                                    {{product.title}}
-                                </td>
-                                <td>
-                                    <label class="badge badge-success badge-pill"> ${{product.original_price}} </label>
-                                </td>
-                                <td>
-                                    @if(product.discount.length > 0)
-                                      <label class="badge badge-danger badge-pill"> %{{product.discount[0].discount}} </label>
-                                    @else
-                                        There is no discount applied yet !
-                                    @endif
-                                </td>
-                                <td>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-danger"> Delete </th>
+                                    <th> Image </th>
+                                    <th> Title </th>
+                                    <th> Original price </th>
+                                    <th> Discount amount </th>
+                                    <th> New price (after discount) </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @each(product in products)
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input" name="products" value="{{product._id}}">
+                                                <i class="input-helper"></i></label>
+                                        </div>
+                                    </td>
+                                    <td class="py-1">
+                                        <img src="{{product.images[0].image}}" alt="product image" class="img-lg">
+                                    </td>
+                                    <td class="font-weight-bold">
+                                        {{product.title}}
+                                    </td>
+                                    <td>
+                                        <label class="badge badge-success badge-pill"> ${{product.original_price}} </label>
+                                    </td>
+                                    <td>
                                         @if(product.discount.length > 0)
-                                            <label class="badge badge-primary badge-pill">
-                                                ${{product.price}}
-                                            </label>
+                                        <label class="badge badge-danger badge-pill"> %{{product.discount[0].discount}} </label>
                                         @else
-                                            No discount applied to
+                                            There is no discount applied yet !
                                         @endif
-                                </td>
-                            </tr>
-                            @endeach
-                        </tbody>
-                    </table>
+                                    </td>
+                                    <td>
+                                            @if(product.discount.length > 0)
+                                                <label class="badge badge-primary badge-pill">
+                                                    ${{product.price}}
+                                                </label>
+                                            @else
+                                                No discount applied to
+                                            @endif
+                                    </td>
+                                </tr>
+                                @endeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary w-100 p-3 mb-5"> Save changes </button>
-    </form>
+            <button type="submit" class="btn btn-primary w-100 p-3 mb-5"> Save changes </button>
+        </form>
+    @else
+        <div class="alert alert-warning">
+            <b> Whoops ! </b> This discount was applied to no product, you can delete it if you want !
+        </div>
+    @endif
 
 </div>
 @endsection

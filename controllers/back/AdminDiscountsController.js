@@ -9,6 +9,7 @@ class Discount{
         let msgType = req.flash('msgType'),
             msg = req.flash(msgType);
         DiscountModel.find((err, discounts) => {
+            // console.log(discounts)
             return res.render('back.discounts', { discounts, msg, msgType})
         })
     }
