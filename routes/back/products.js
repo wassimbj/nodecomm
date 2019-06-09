@@ -21,12 +21,21 @@ const storage = cloudinaryStorage({
 
 const imgparser = multer({ storage: storage });
 
+// Main Route: /admin/product
+
+// Show all products
+router.get('/', AdminProductsController.index)
+
 // Create products
 router.get('/create', AdminProductsController.create);
 router.post('/create', imgparser.array('img', 5), AdminProductsController.store);
 
 // edit products
+router.get('/:id/edit', AdminProductsController.edit)
+router.post('/update', AdminProductsController.update)
 
 // delete products
+router.get('/:id/delete', AdminProductsController.delete);
+
 
 module.exports = router;

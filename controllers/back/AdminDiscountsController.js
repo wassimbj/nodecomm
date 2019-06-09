@@ -4,11 +4,11 @@ const mongoose = require('mongoose')
 
 class Discount{
     // render discounts view
-    index(req, res)
+    async index(req, res)
     {
         let msgType = req.flash('msgType'),
             msg = req.flash(msgType);
-        DiscountModel.find((err, discounts) => {
+        await DiscountModel.find((err, discounts) => {
             // console.log(discounts)
             return res.render('back.discounts', { discounts, msg, msgType})
         })

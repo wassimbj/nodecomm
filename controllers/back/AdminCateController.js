@@ -1,5 +1,6 @@
 const Cate = require('../../database/models/Category')
 const SubCate = require('../../database/models/SubCategory')
+const mongoose = require('mongoose')
 
 class Category {
 
@@ -142,6 +143,25 @@ class Category {
                 return res.redirect('back');
             })
         }
+    }
+
+    // get the product sub categories
+    getSubcate(req, res) {
+        let parent_id = req.body.parent;
+        SubCate.find({ parent: mongoose.Types.ObjectId(parent_id) }, (err, subs) => {
+            let output = `<label class='font-weight-bold'> Select the sub-category (<small><a href='/admin/category/create'> add a sub-category </a></small>) </label>`;
+            if(!err && subs.length > 0)
+            {
+                output += `<select class='form-control form-control-lg' name='subc'>`;
+                subs.map(sub => {
+                    output += `<option value='${sub.name}'> ${sub.name} </option>`;
+                })
+                output += `</select>`;
+            }else{
+                output += `<p class='alert alert-info'> There is no sub-categories for this category ! </p>`;
+            }
+            res.json(output)
+        })
     }
 
 }
