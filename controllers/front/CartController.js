@@ -1,33 +1,77 @@
 const CartModel = require('../../database/models/Cart');
 const Product = require('../../database/models/Product');
 const ProductImage = require('../../database/models/ProductImage');
+const mongoose = require('mongoose')
+
 class Cart{
 
     async index(req, res)
     {
         var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
-        await CartModel.find({author: req.session.userid, paid: 0})
-                .populate('product')
-                .exec((err, result) => {
-                    var images = {},
-                        total = 0;
+        CartModel.aggregate([
+            { $match: { author: mongoose.Types.ObjectId(req.session.userid), paid: 0}},
             
-                    result.map(function (item) {
-                        ProductImage.findOne({ img_to: item.product._id }, function (err, img) {
-                            images[img.img_to] = img.image;
-                        });
-                        total = total + item.total
-                        // console.log(item.total)
-                    })
-                    return res.render('front.cart', {
-                        images,
-                        result,
-                        msg, msgType,
-                        total
-                    })
+            {
+                "$lookup": {
+                    from: "products",
+                    let: { "p_id": "$product" },
+                    pipeline: [
+                        { "$match": { $expr: { $eq: ["$_id", "$$p_id"] } } },
+                        {
+                            "$lookup": {
+                                from: 'productimages',
+                                let: { "p_id": "$_id" },
+                                pipeline: [
+                                    { "$match": { $expr: { $eq: ["$img_to", "$$p_id"] } } },
+                                ],
+                                as: "images"
+                            }
+                        }
+                    ],
+                    as: "product"
+                }
+            },
 
-                });
+            {
+                $group: {
+                    _id: null,
+                    // id: { $first: '$_id' },
+                    // size: {$first: '$size'},
+                    // quantity: {$first: '$quantity'},
+                    // paid: {$first: '$paid'},
+                    // created_at: {$first: '$created_at'},
+                    // color: {$first: '$color'},
+                    // product: {$first: '$product'},
+                    // author: {$first: '$author'},
+                    // total: {$first: '$total'},
+                    totalAmount: { $sum: {$sum: '$total'}},
+                    count: {$sum: 1},
+                    data: {
+                        $push: "$$ROOT"
+                        // {
+                        //     size: "$size",
+                        //     quantity: "$quantity",
+                        //     id: '$_id',
+                        //     size: '$size',
+                        //     quantity: '$quantity',
+                        //     paid: '$paid',
+                        //     created_at: '$created_at',
+                        //     color: '$color',
+                        //     product: '$product',
+                        //     author: '$author',
+                        //     total: '$total'
+                        // }
+                    },
+                }
+            },
+        ]).exec((err, cart_elems) => {
+            // console.log(cart_elems)
+            return res.render('front.cart', {
+                cart_elems,
+                msg, msgType
+            })
+        })
     }
 
     // Add to cart

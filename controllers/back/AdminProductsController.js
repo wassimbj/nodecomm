@@ -86,12 +86,13 @@ class Product {
     }
 
     // render the edit product view
-    // method: GET
+    // method: GET, Params: product id
     async edit(req, res)
     {
         var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
         await ProductModel.aggregate([
+            {$match: {_id: mongoose.Types.ObjectId(req.params.id)}},
             {
                 $lookup: {
                     from: 'productimages',
