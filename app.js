@@ -11,7 +11,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo')(session);
 
-const gateway = require('./lib/gateway');
+// const gateway = require('./lib/gateway');
 
 const app = new express();
 

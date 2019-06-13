@@ -73,7 +73,7 @@
                     <textarea class="single-textarea single-input-accent" placeholder="Do you have any thing you wanna say ?" name='message'>{{ship.message || ''}}</textarea>
                 </div>
                 <button type="submit" class="genric-btn info circle arrow w-100 d-block mt-4">
-                    {{ ship._id == '' ? 'Next' : 'Save changes' }}
+                    {{ !ship ? 'Next' : 'Save changes' }}
                     <span class="lnr lnr-arrow-right"></span>
                 </button>
             </form>

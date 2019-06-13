@@ -3,9 +3,11 @@ const Order = require('../../database/models/Order');
 const Cart = require('../../database/models/Cart');
 const Shipping = require('../../database/models/Shipping');
 
+// const path = require('path')
+const mongoose = require('mongoose')
 const braintree = require('braintree');
 const gateway = require('../../lib/gateway');
-const Controller = require('../../controllers/front/Controller');
+const Controller = require('../Controller');
 
 class Checkout extends Controller{
     constructor()
@@ -24,17 +26,18 @@ class Checkout extends Controller{
         this.amount = 0;
         //  console.log(this)
     }
+
     // Cart empty middelware
-    middlware(req, res, next)
+    async middlware(req, res, next)
     {
-        super.cart_is_empty(req.session.userid, (empty) => {
-            if(empty)
-            {
-                req.flash('warning', "You can't checkout, your cart is empty !");
-                req.flash('msgType', 'warning')
-                return res.redirect('/user/cart')
-            }
-            next()
+        await super.cart_is_empty(req.session.userid, (empty) => {
+                if(empty)
+                {
+                    req.flash('warning', "You can't checkout, your cart is empty !");
+                    req.flash('msgType', 'warning')
+                    return res.redirect('/user/cart')
+                }
+                next()
         });
     }
 
@@ -70,6 +73,7 @@ class Checkout extends Controller{
     }
 
     // Create payment status, Error || Success
+    /***
     createResultObject(transaction) {
         var result;
         var status = transaction.status;
@@ -92,14 +96,87 @@ class Checkout extends Controller{
     }
 
     // Get the transaction
-    transaction(req, res) {
-        var result;
-        var transactionId = req.params.id;
+    // Route: /user/checkout/:transaction_id
+    async transaction(req, res) {
+            var result;
+            var transactionId = req.params.id;
 
-        gateway.transaction.find(transactionId, function (err, transaction) {
-            result = this.createResultObject(transaction);
-            // console.log(result)
-            res.json({ transaction: transaction, result: result });
+            await gateway.transaction.find(transactionId, function (err, transaction) {
+                    result = this.createResultObject(transaction);
+                    // console.log(result)
+                    res.json({ transaction: transaction, result: result });
+            });
+    }
+    **/
+
+
+    // render order success/confirmation page
+    confirmation(req, res)
+    {
+        const order_id = req.flash('order_id');
+        // console.log('ORDER ID: ', order_id)
+        Order.aggregate([
+            { $match: { _id: mongoose.Types.ObjectId(order_id[0]) } },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'customer',
+                    foreignField: '_id',
+                    as: 'customer'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'shippings',
+                    localField: 'ship_to',
+                    foreignField: '_id',
+                    as: 'ship'
+                }
+            },
+            {
+                $lookup: {
+                    "from": "carts",
+                    "let": { "ords": "$orders" },
+                    "pipeline": [
+                        { "$match": { "$expr": { "$in": ["$_id", "$$ords"] } } },
+                        {
+                            "$lookup": {
+                                "from": 'products',
+                                "let": { "p_id": "$product" },
+                                "pipeline": [
+                                    { "$match": { "$expr": { "$eq": ["$_id", "$$p_id"] } } },
+                                ],
+                                as: "product"
+                            }
+                        }
+                    ],
+                    "as": "ords"
+                }
+            }
+        ]).exec((err, order) => {
+            if(order.length > 0)
+            {
+
+                // // send confirmation email to the user
+                let user = order[0].customer[0],
+                    content = `
+                        <b> Hey ${user.firstname+" "+user.lastname} </b>
+                         <br>
+                        <p> Your order was successfully made !</p>
+                        <p> We are so happy that you choosed nodeComm as your shopping place ! </p>
+                        <p>
+                            You can learn more about your order 
+                            <a href='http://localhost:3000/' style='background: #333; border: none; padding: 10px; border-radius: 20ox; color: #fff'> here </a>
+                        </p>
+                    `;
+                super.sendmail('wassimbenjdida@gmail.com', 'Order confirmation !', content, (result) => {
+                    console.log(result)
+                })
+                // display view
+                return res.render('front.confirmation', { order: order[0] })
+            }else{
+                return res.redirect('/user/cart')
+            }
         });
     }
 
@@ -121,7 +198,6 @@ class Checkout extends Controller{
                     paid_at = result.transaction.createdAt;
                 super.order_details(req.session.userid, (orders, total) => {
                    Shipping.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
-                    //    ship_to = ship.id
                        Order.create({
                            customer: req.session.userid,
                            orders,
@@ -135,17 +211,23 @@ class Checkout extends Controller{
                            {
                                // Update cart to paid
                                order.orders.map(cart_id => {
-                                   Cart.findOneAndUpdate({_id: cart_id}, { paid: 1 }, (err, paid_cart) => { console.log(err) })
+                                   Cart.findOneAndUpdate({_id: cart_id}, { paid: 1 }).exec()
                                });
                                // Update the shipping to used
-                               Shipping.findOneAndUpdate({_id: order.ship_to}, { used: 1 }, (err, address) => { console.log(err) })
+                               Shipping.findOneAndUpdate({_id: order.ship_to}, { used: 1 }).exec()
+                              
+                            // console.log('ORDER CREATED: ', order);
+                            req.flash('order_id', order._id)
+                            return res.redirect('/user/checkout/success');
+
+                           }else {
+                               console.log('ERROR: ', err)
                            }
-                           else { console.log('ERROR: ', err) }
                        });
                    })
                 });
+                // req.flash()
 
-                return res.redirect('/user/checkout/success');
             } else {
                 transactionErrors = result.errors.deepErrors();
                 req.flash('danger', Checkout.prototype.formatErrors(transactionErrors));

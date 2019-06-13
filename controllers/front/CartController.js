@@ -36,33 +36,9 @@ class Cart{
             {
                 $group: {
                     _id: null,
-                    // id: { $first: '$_id' },
-                    // size: {$first: '$size'},
-                    // quantity: {$first: '$quantity'},
-                    // paid: {$first: '$paid'},
-                    // created_at: {$first: '$created_at'},
-                    // color: {$first: '$color'},
-                    // product: {$first: '$product'},
-                    // author: {$first: '$author'},
-                    // total: {$first: '$total'},
                     totalAmount: { $sum: {$sum: '$total'}},
                     count: {$sum: 1},
-                    data: {
-                        $push: "$$ROOT"
-                        // {
-                        //     size: "$size",
-                        //     quantity: "$quantity",
-                        //     id: '$_id',
-                        //     size: '$size',
-                        //     quantity: '$quantity',
-                        //     paid: '$paid',
-                        //     created_at: '$created_at',
-                        //     color: '$color',
-                        //     product: '$product',
-                        //     author: '$author',
-                        //     total: '$total'
-                        // }
-                    },
+                    data: {$push: "$$ROOT"}
                 }
             },
         ]).exec((err, cart_elems) => {

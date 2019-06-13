@@ -1,7 +1,7 @@
 const Ship = require('../../database/models/Shipping');
 // const Order = require('../../database/models/Order');
 const UserModel = require('../../database/models/User');
-const Controller = require('../../controllers/front/Controller');
+const Controller = require('../Controller');
 
 class Shipping extends Controller{
     constructor() {
@@ -11,23 +11,32 @@ class Shipping extends Controller{
     // Shipping view
     index(req, res) {
         super.cart_is_empty(req.session.userid, function(empty){
-            if (!empty) {
+            if (!empty)
+            {
                 var msgType = req.flash('msgType'),
                     msg = req.flash(msgType),
                     data = req.flash('data');
+
                 Ship.findOne({ user: req.session.userid, used: 0 }).exec((err, ship) => {
                     if (!err) {
                         UserModel.findOne({ _id: req.session.userid }, { password: false }, (error, user) => {
-                            if (error || !user) {
+                            if (error || !user)
+                            {
                                 req.flash('warning', 'Please login to continue the process');
                                 req.flash('msgType', 'warning')
                                 return res.redirect('/user/cart')
                             } else
-                                return res.render('front.shipping', { msg, msgType, data: data[0], ship, user })
+                                return res.render('front.shipping', {
+                                    ship,
+                                    data: data[0],
+                                    user,
+                                    msg, msgType
+                                })
                         })
                     } else
                         return null;
                 });
+
             } else {
                 req.flash('warning', "Your cart is empty, you can't procceed to next steps");
                 req.flash('msgType', 'warning')
