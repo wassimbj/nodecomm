@@ -9,6 +9,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true, required: [true, 'Please enter the email'] },
     password: { type: String, required: [true, 'Please enter the password'] },
     image: { type: String },
+    verified: {type: Boolean, default: false},
     created_at: { type: Date, default: new Date() }
 });
 

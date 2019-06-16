@@ -3,92 +3,32 @@ const OrderModel = require('../../database/models/Order');
 var fs = require('fs');
 const pdf = require('html-pdf')
 
-class Order {
+const Controller = require('../Controller');
+
+class Order extends Controller{
 
     constructor()
     {
+        super();
         this.order_details = [];
     }
 
     // See All orders
     index(req, res) {
-        OrderModel.aggregate([
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'customer',
-                    foreignField: '_id',
-                    as: 'customer'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'shippings',
-                    localField: 'ship_to',
-                    foreignField: '_id',
-                    as: 'ship'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'carts',
-                    localField: 'orders',
-                    foreignField: '_id',
-                    as: 'ordersObject'
-                }
-            }
-        ]).exec((err, orders) => {
+        super.get_orders((orders) => {
             res.render('back.orders', { orders });
-        });
+        })
     }
     
     // Single detailed order
     details(req, res)
     {
         const id = req.params.id;
-        OrderModel.aggregate([
-            {$match: {_id: mongoose.Types.ObjectId(id)}},
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'customer',
-                    foreignField: '_id',
-                    as: 'customer'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'shippings',
-                    localField: 'ship_to',
-                    foreignField: '_id',
-                    as: 'ship'
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "carts",
-                    "let": { "ords": "$orders" },
-                    "pipeline": [
-                        { "$match": { "$expr": { "$in": ["$_id", "$$ords"] } } },
-                        {
-                          "$lookup": {
-                              "from": 'products',
-                              "let": { "p_id": "$product" },
-                              "pipeline": [
-                                  { "$match": { "$expr": { "$eq": ["$_id", "$$p_id"] } } },
-                              ],
-                              as: "product"
-                          }
-                        }
-                    ],
-                    "as": "ords"
-                }
-            }
-        ]).exec((err, order) => {
+        super.get_single_order(id, (order) => {
             // console.log(order[0])
             this.order_details = order[0];
             res.render('back.order_details', { order: order[0]})
-        });
+        })
 
     }
 

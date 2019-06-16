@@ -45,3 +45,98 @@ label{width: 100%}
     border-radius: 50%;
     padding: 1px;
 }
+
+.order-box{box-shadow: 0 0 15px rgba(0,0,0,0.1)}
+
+.order_p_img:not(:first-child){margin-left: -30px}
+.order_p_img img{width: 70px; height: 70px}
+.order_steps > span{position: relative; padding: 0.6rem; width: 33.2%; font-size: 14px; font-weight: bold}
+
+.order_steps{overflow: hidden}
+.order_steps > .active:before{
+  content: '\2713';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order_steps .active_test::after{
+  content: '';
+  position: absolute;
+  top: 0%;
+  left: 100%;
+  border-width: 20px;
+  border-color: transparent transparent transparent rgba(0,0,0,0.85);
+  border-style: solid;
+}
+
+/* --------- discount badge style ------- */
+.discount {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  position: absolute;
+  display: inline-block;
+  background: #0a121f;
+  width: auto;
+  height: 30px;
+  line-height: 32px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  top: 4px;
+  left: 30px;
+  z-index: 99;
+}
+.discount:after {
+  content: " ";
+  height: 22px;
+  width: 22px;
+  background:#0a121f;
+  position: absolute;
+  top:4px;
+  left:-9px;
+  border-radius:4px;
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.discount:before { /* that little circle */
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  position: absolute;
+  top: 12px;
+  left: 0px;
+  z-index: 1;
+  border-radius: 10px;
+}
+
+.product_price del{color: #999 !important}
+.product_price h5,
+.product_price b{color: #fd403e }
+
+
+/* =========== Customer Profile ============*/
+.profile_wrapper > div:first-of-type{width: 28%}
+.profile_wrapper > div:nth-child(2){width: 70%}
+@media (max-width: 990px){
+  .profile_wrapper{display: block !important;}
+  .profile_wrapper > div{width: 100% !important; margin: 2rem 0 0 0}
+}

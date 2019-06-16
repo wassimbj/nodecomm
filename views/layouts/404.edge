@@ -1,0 +1,26 @@
+@layout('layouts.front')
+    
+@section('content')
+<!--================Home Banner Area =================-->
+        <section class="banner_area">
+            <div class="banner_inner d-flex align-items-center">
+				<div class="container">
+					<div class="banner_content text-center">
+						<h2> 404 NOT FOUND </h2>
+						<div class="page_link">
+							Whoops ! i think you lost here...
+						</div>
+					</div>
+				</div>
+            </div>
+        </section>
+    <!--================End Home Banner Area =================-->
+   <div class="p-3">
+       <img src='/front/img/404.png' width="400px" height="400px" class="mx-auto d-block">
+       <div class="pt-3 text-center">
+         <h3>Probably there is no page found, or it was deleted !</h3>
+         <a href="/shop" class="btn btn-danger m-5 pl-5 pr-5 p-2"> Go back </a>
+       </div>
+   </div>
+
+@endsection

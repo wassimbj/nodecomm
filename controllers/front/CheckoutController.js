@@ -115,45 +115,7 @@ class Checkout extends Controller{
     {
         const order_id = req.flash('order_id');
         // console.log('ORDER ID: ', order_id)
-        Order.aggregate([
-            { $match: { _id: mongoose.Types.ObjectId(order_id[0]) } },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'customer',
-                    foreignField: '_id',
-                    as: 'customer'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'shippings',
-                    localField: 'ship_to',
-                    foreignField: '_id',
-                    as: 'ship'
-                }
-            },
-            {
-                $lookup: {
-                    "from": "carts",
-                    "let": { "ords": "$orders" },
-                    "pipeline": [
-                        { "$match": { "$expr": { "$in": ["$_id", "$$ords"] } } },
-                        {
-                            "$lookup": {
-                                "from": 'products',
-                                "let": { "p_id": "$product" },
-                                "pipeline": [
-                                    { "$match": { "$expr": { "$eq": ["$_id", "$$p_id"] } } },
-                                ],
-                                as: "product"
-                            }
-                        }
-                    ],
-                    "as": "ords"
-                }
-            }
-        ]).exec((err, order) => {
+        super.get_single_order(order_id[0], (order) => {
             if(order.length > 0)
             {
 
@@ -165,11 +127,12 @@ class Checkout extends Controller{
                         <p> Your order was successfully made !</p>
                         <p> We are so happy that you choosed nodeComm as your shopping place ! </p>
                         <p>
-                            You can learn more about your order 
+                            You can learn more about your order
+                            <br>
                             <a href='http://localhost:3000/' style='background: #333; border: none; padding: 10px; border-radius: 20ox; color: #fff'> here </a>
                         </p>
                     `;
-                super.sendmail('wassimbenjdida@gmail.com', 'Order confirmation !', content, (result) => {
+                super.sendmail(user.email, 'Order confirmation !', content, (result) => {
                     console.log(result)
                 })
                 // display view
@@ -177,7 +140,7 @@ class Checkout extends Controller{
             }else{
                 return res.redirect('/user/cart')
             }
-        });
+        })
     }
 
     // Make the payment/checkout

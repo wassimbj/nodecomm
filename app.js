@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const path = require('path');
+const path = require('path');
 const mongoose = require('mongoose');
 const expressEdge = require('express-edge');
 const edge = require('edge.js');
@@ -16,7 +16,7 @@ const MongoStore = require('connect-mongo')(session);
 const app = new express();
 
 // static file (css, js ..)
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressEdge);
 app.set('views', `${__dirname}/views`);
 
@@ -60,25 +60,22 @@ const Cart = require('./database/models/Cart');
 
 
 //######################## Bring all Controllers #########################
-// Front (or user)
+// Front (customer)
 const HomeController = require('./controllers/front/HomeController');
 const ShopController = require('./controllers/front/ShopController');
 const WishlistController = require('./controllers/front/WishlistController');
 
-// Back (or Admin)
+// Back (Admin)
 const AdminHomeController = require('./controllers/back/AdminHomeController');
 
-// const UserController = require('./controllers/UserController');
-// const CartController = require('./controllers/CartController');
-// const ShippingController = require('./controllers/ShippingController');
-// const CheckoutController = require('./controllers/CheckoutController');
 //######################## Bring all Routes #########################
 // Front
+const mainShop = require('./routes/front/shop')
 const userAuth = require('./routes/front/auth');
 const userCart = require('./routes/front/cart');
 const userShip = require('./routes/front/ship');
 const userCheckout = require('./routes/front/checkout');
-const mainShop = require('./routes/front/shop')
+const userProfile = require('./routes/front/profile')
 
 // Back 
 const adminProducts = require('./routes/back/products')
@@ -86,7 +83,6 @@ const AdminCate = require('./routes/back/category')
 const AdminBrands = require('./routes/back/brands')
 const AdminOrders = require('./routes/back/orders')
 const AdminDiscounts = require('./routes/back/discounts')
-
 
 // ############### Front ##################
 app.use('*', (req, res, next) => {
@@ -120,7 +116,7 @@ app.use('/user/shipping', userShip)
 // Checkout
 app.use('/user/checkout', userCheckout)
 
-
+app.use('/user/profile', userProfile)
 // ############### Back (Admin) ##################
 
 app.get('/admin', AdminHomeController.index);
@@ -135,6 +131,10 @@ app.use('/admin/orders', AdminOrders)
 
 app.use('/admin/discounts', AdminDiscounts)
 
+// 404 PAGE
+app.use((req, res) => {
+    res.status(404).render('layouts.404')
+});
 
 
 

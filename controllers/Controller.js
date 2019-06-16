@@ -1,8 +1,8 @@
-const path = require('path');
+// const path = require('path');
 const Cart = require('../database/models/Cart');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const edge = require('edge.js')
+const Order = require('../database/models/Order')
 
 class Controller {
     constructor() {
@@ -66,6 +66,99 @@ class Controller {
         cb(info);
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
     }
+
+    // get signle order by id
+    async get_single_order(id, cb)
+    {
+        await Order.aggregate([
+            { $match: { _id: mongoose.Types.ObjectId(id) } },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'customer',
+                    foreignField: '_id',
+                    as: 'customer'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'shippings',
+                    localField: 'ship_to',
+                    foreignField: '_id',
+                    as: 'ship'
+                }
+            },
+            {
+                $lookup: {
+                    "from": "carts",
+                    "let": { "ords": "$orders" },
+                    "pipeline": [
+                        { "$match": { "$expr": { "$in": ["$_id", "$$ords"] } } },
+                        {
+                            "$lookup": {
+                                "from": 'products',
+                                "let": { "p_id": "$product" },
+                                "pipeline": [
+                                    { "$match": { "$expr": { "$eq": ["$_id", "$$p_id"] } } },
+                                ],
+                                as: "product"
+                            }
+                        }
+                    ],
+                    "as": "ords"
+                }
+            }
+        ]).exec((err, order) => {
+            cb(order)
+        });
+    }
+
+    // get orders
+    async get_orders(cb){
+        await Order.aggregate([
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'customer',
+                    foreignField: '_id',
+                    as: 'customer'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'shippings',
+                    localField: 'ship_to',
+                    foreignField: '_id',
+                    as: 'ship'
+                }
+            },
+            {
+                $lookup: {
+                    "from": "carts",
+                    "let": { "ords": "$orders" },
+                    "pipeline": [
+                        { "$match": { "$expr": { "$in": ["$_id", "$$ords"] } } },
+                        {
+                            "$lookup": {
+                                "from": 'products',
+                                "let": { "p_id": "$product" },
+                                "pipeline": [
+                                    { "$match": { "$expr": { "$eq": ["$_id", "$$p_id"] } } },
+                                ],
+                                as: "product"
+                            }
+                        }
+                    ],
+                    "as": "ords"
+                }
+            }
+        ]).exec((err, order) => {
+            cb(order)
+        });
+    }
+
+
+
 }
 
 module.exports = Controller;
