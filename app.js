@@ -4,9 +4,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const expressEdge = require('express-edge');
 const edge = require('edge.js');
-const cloudinary = require('cloudinary');
-const cloudinaryStorage = require('multer-storage-cloudinary');
-const multer = require('multer');
+// const cloudinary = require('cloudinary');
+// const cloudinaryStorage = require('multer-storage-cloudinary');
+// const multer = require('multer');
 const session = require('express-session');
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo')(session);
@@ -26,7 +26,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // Connect to the database
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb://localhost/nodeComm', { useNewUrlParser: true });
+const mongo_uri = process.env.MONGODB_URI || 'mongodb://localhost/nodeComm';
+mongoose.connect(mongo_uri, { useNewUrlParser: true });
 db = mongoose.connection;
 db.once('open', () => { console.log('DB connected :)') });
 db.on('error', (err) => { console.log(err) });
@@ -40,20 +41,20 @@ app.use(session({
 app.use(flash());
 
 // Cloudinary config
-cloudinary.config({
-    cloud_name: 'wassimbj',
-    api_key: '984761639488781',
-    api_secret: 'pzOuyNMKKwZEh14s0ahCYoWLPDc'
-});
+// cloudinary.config({
+//     cloud_name: 'wassimbj',
+//     api_key: '984761639488781',
+//     api_secret: 'pzOuyNMKKwZEh14s0ahCYoWLPDc'
+// });
 
-const storage = cloudinaryStorage({
-    cloudinary: cloudinary,
-    folder: "nodeComm",
-    allowedFormats: ["jpg", "png", 'svg', 'jpeg'],
-    transformation: [{ width: 500, height: 500, crop: "limit" }]
-});
+// const storage = cloudinaryStorage({
+//     cloudinary: cloudinary,
+//     folder: "nodeComm",
+//     allowedFormats: ["jpg", "png", 'svg', 'jpeg'],
+//     transformation: [{ width: 500, height: 500, crop: "limit" }]
+// });
 
-const imgparser = multer({storage: storage});
+// const imgparser = multer({storage: storage});
 
 //######################## Bring all models #########################
 const Cart = require('./database/models/Cart');
