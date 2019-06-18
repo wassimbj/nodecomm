@@ -119,6 +119,48 @@ class User extends Controller{
 
     }
 
+
+    // Send email verififcation
+    // Method: GET
+    async send_verification(req, res)
+    {
+        await UserModel.findOne({_id: req.session.userid})
+                .exec((err, user) => {
+                        let content = `
+                                <div style='max-width:600px;margin:0 auto;font-size:16px;line-height:24px'>
+                                    <div style='text-center; display: block'> <h3> NodeComm </h3> </div>
+                                    Hey ${user.firstname} ! <br>
+                                    <p> Please verify your email so you can start making great deals and get our latest ! </p>
+                                    <p> <img src='https://www.datavalidation.com/assets/images/15469571.validation-icon.png'> </p>
+                                    <br>
+                                    <a href='http://localhost:3000/auth/verify/${user.verify_token}'
+                                        style='background-color: #17b978;
+                                                color: white;
+                                                padding: 1em 2rem;
+                                                display: block;
+                                                font-weight: bold;
+                                                text-decoration: none;
+                                                text-align: center;'
+                                    >
+                                        Verify email
+                                    </a>
+                                    <hr>
+                                    <b> OR </b>
+                                    <p> You can copy and paste this link in your browser if the link button doesn't work </p>
+                                    <p> http://localhost:3000/auth/verify/${user.verify_token} </p>
+                                </div>
+                            `;
+
+                        super.sendmail(user.email, 'Email verification ! from Nodecomm', content, (resp) => {
+                            if (resp) {
+                                req.flash('msgType', 'success');
+                                req.flash('success', 'Please check your inbox ! we have sent you the verification email')
+                                return res.redirect('/user/profile');
+                            }
+                        });
+                })
+    }
+
     // Verify user email
     async verify_email(req, res)
     {
@@ -126,7 +168,7 @@ class User extends Controller{
         await UserModel.findOne({
             verify_token: req.params.token
         }, {password: false}, (err, user) => {
-            console.log('findOne: ', err, user)
+            // console.log('findOne: ', err, user)
             let confirmed = true;
             if(!err && user)
             {
@@ -144,7 +186,6 @@ class User extends Controller{
             return res.render('front.verify_email', { confirmed })
         })
     }
-
 
     // Auth function
     auth(req, res, next){

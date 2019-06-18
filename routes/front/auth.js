@@ -16,4 +16,6 @@ router.get('/logout', UserController.auth, UserController.logout)
 
 router.get('/verify/:token', UserController.verify_email)
 
+router.get('/send/verification', UserController.send_verification)
+
 module.exports = router;

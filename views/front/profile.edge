@@ -21,7 +21,25 @@
         <div class="container">
           
             @include('layouts.flash-msg')
-            
+            @if(!user.verified)
+
+                <div class="card mb-3 mx-auto" style="max-width: 600px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="/front/img/email-verification.svg" class="card-img">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4 class="card-title text-dark"> Verify your email ! </h4>
+                                <p class="card-text">Hey {{user.firstname}} ! please verify your email, just click the button down bellow and we will send you an email verification</p>
+                                <p class="card-text">
+                                    <a href="/auth/send/verification" class='genric-btn success w-100'> Send verification </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
           <div class="d-flex flex-wrap align-items-start profile_wrapper">
     
                 <div class="img-thumbnail mr-3 position-relative">

@@ -14,7 +14,10 @@ class Profile extends Controller{
 
     // render profile view
     async index(req, res){
-        let user_id = mongoose.Types.ObjectId(req.session.userid)
+        let user_id = mongoose.Types.ObjectId(req.session.userid),
+            msgType = req.flash('msgType'),
+            msg = req.flash(msgType);
+            
         await User.findById(user_id, {password: false}, (err, user) => {
             // get wishlist and then get orders
             Wishlist.aggregate([
@@ -100,11 +103,11 @@ class Profile extends Controller{
                         }
                     }
                 ]).exec((err, orders) => {
-                    // console.log(wishlist[0].product)
                     res.render('front.profile', {
                         user,
                         wishlist,
-                        orders
+                        orders,
+                        msg, msgType
                     });
                 });
             })
