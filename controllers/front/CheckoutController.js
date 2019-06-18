@@ -122,15 +122,15 @@ class Checkout extends Controller{
                 // // send confirmation email to the user
                 let user = order[0].customer[0],
                     content = `
+                    <div style='max-width:600px;margin:0 auto;font-size:16px;line-height:24px'>
                         <b> Hey ${user.firstname+" "+user.lastname} </b>
                          <br>
                         <p> Your order was successfully made !</p>
                         <p> We are so happy that you choosed nodeComm as your shopping place ! </p>
                         <p>
-                            You can learn more about your order
-                            <br>
-                            <a href='http://localhost:3000/' style='background: #333; border: none; padding: 10px; border-radius: 20ox; color: #fff'> here </a>
+                            You can learn more about your orde in your profile !
                         </p>
+                    </div>
                     `;
                 super.sendmail(user.email, 'Order confirmation !', content, (result) => {
                     console.log(result)

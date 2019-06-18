@@ -61,11 +61,11 @@ $(document).ready(function () {
                 color: JSON.stringify(color),
                 sorting
             },
-            beforeSend: () => { $('.latest_product_inner').html(loader) },
+            beforeSend: () => { $('#shop_products').html(loader) },
             success: function(data)
             {
                 // console.log(data)
-                $('.latest_product_inner').html(data)
+                $('#shop_products').html(data)
             }
         });
     }
