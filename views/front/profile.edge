@@ -15,7 +15,7 @@
 				</div>
             </div>
         </section>
-        <!--================End Home Banner Area =================-->
+<!--================End Home Banner Area =================-->
 
     <div class="bg-0 pt-5 pb-5">
         <div class="container">
@@ -53,106 +53,107 @@
     
     
                 <div class="bd-example bd-example-tabs img-thumbnail">
-                <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#orders">My Orders</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#wishlist">My Wishlist</a>
-                    </li>
-                </ul>
-                <!-- ########################## Orders Tab ######################### -->
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="home-tab">
-                        @if(orders.length > 0)
-                           @each(order in orders)
-                             <!--  Order Box  -->
-                                <div class='img-thumbnail p-0 mt-3'>
-                                    <div class='d-flex align-items-center justify-content-between p-2'>
-                                        <!--    order imgs    -->
-                                        <div class='d-flex align-items-center'>
-                                                @each(cart in order.ords)
-                                                    <span class='order_p_img'>
-                                                        <img src='{{cart.product[0].images[0].image}}' class='rounded-circle img-thumbnail' width='70px' style='height: 70px'/>
-                                                    </span>
-                                                @endeach
-                                                @each(cart in order.ords)
-                                                    <!--   order product names    -->
-                                                    <div class='ml-3'>
-                                                    
-                                                        <p class='text-muted mb-1'>
-                                                            {{cart.product[0].title}}
-                                                            <b>{{cart.quantity}}</b>
-                                                        </p>
-                                                    </div>
-                                                @endeach
+                    <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#orders">My Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#wishlist">My Wishlist</a>
+                        </li>
+                    </ul>
+                    <!-- ########################## Orders Tab ######################### -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="home-tab">
+                            @if(orders.length > 0)
+                            @each(order in orders)
+                                <!--  Order Box  -->
+                                    <div class='img-thumbnail p-0 mt-3'>
+                                        <div class='d-flex align-items-center justify-content-between p-2'>
+                                            <!--    order imgs    -->
+                                            <div class='d-flex align-items-center'>
+                                                    @each(cart in order.ords)
+                                                        <span class='order_p_img'>
+                                                            <img src='{{cart.product[0].images[0].image}}' class='rounded-circle img-thumbnail' width='70px' style='height: 70px'/>
+                                                        </span>
+                                                    @endeach
+                                                    @each(cart in order.ords)
+                                                        <!--   order product names    -->
+                                                        <div class='ml-3'>
+                                                        
+                                                            <p class='text-muted mb-1'>
+                                                                {{cart.product[0].title}}
+                                                                {{cart.quantity == 1 ? '' : '(x'+cart.quantity+')'}}
+                                                            </p>
+                                                        </div>
+                                                    @endeach
+                                                </div>
+                                                <!--  Order price and time  -->
+                                            <div>
+                                                <p class='mb-0'>
+                                                    <h4 class='font-weight-bold'> 
+                                                      ${{order.total}}
+                                                    </h4> 
+                                                </p>
+                                                <p class='text-muted text-right mb-0'>
+                                                    <small>
+                                                        {{order.created_at.toString().substring(0, 15)}}
+                                                    </small>
+                                                </p>
                                             </div>
-                                            <!--  Order price and time  -->
-                                        <div>
-                                            <p class='mb-0'>
-                                                <h5 class='font-weight-bold'> 
-                                                ${{order.total}}
-                                                </h5> 
-                                            </p>
-                                            <p class='text-muted text-right mb-0'>
-                                                <small>
-                                                    {{order.created_at}}
-                                                </small>
-                                            </p>
+                                        </div>
+                                        <hr class='mb-0' />
+                                        <div class='d-flex justify-content-between text-center order_steps'>
+                                            @if(order.delivered)
+                                                <span class='w-100 bg-success text-white'>
+                                                    <h5> <i class="far fa-check-circle"></i> Delivered</h5>
+                                                </span>
+                                            @else
+                                                <span class='active'> Recieved </span>
+                                                <span class='active'> Preparing </span>
+                                                <span> Delivered </span>
+                                            @endif
                                         </div>
                                     </div>
-                                    <hr class='mb-0' />
-                                    <div class='d-flex justify-content-between text-center order_steps'>
-                                        @if(order.delivered)
-                                            <span class='w-100 bg-success text-white'>
-                                                <h5> <i class="far fa-check-circle"></i> Delivered</h5>
-                                            </span>
-                                        @else
-                                            <span class='active'> Recieved </span>
-                                            <span class='active'> Preparing </span>
-                                            <span> Delivered </span>
-                                        @endif
+                                <!-- end of order box -->
+                            @endeach
+                            @else
+                                <h3 class="text-muted text-center pt-5 pb-4">
+                                    <p><i class="fas fa-truck-loading"></i></p>
+                                    <p>Yooo! you have no orders yet...</p>
+                                </h3>
+                            @endif
+                        </div>
+                        <!-- ########################## Wishlist Tab ######################### -->
+                        <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="profile-tab">
+                          @if(wishlist.length > 0)
+                            <div class="row p-2">
+                            @each(wish in wishlist)
+                                <!-- product card -->
+                                    <div class="col-lg-3 col-md-4 col-sm-6">
+                                        <div class="f_p_item">
+                                            <div class="f_p_img">
+                                                <img class="img-fluid" src="{{wish.product[0].images[0].image}}" alt="">
+                                                <div class="p_icon">
+                                                    <a href="/product/{{wish.product[0].title}}"><i class="lnr lnr-cart"></i></a>
+                                                </div>
+                                            </div>
+                                            <a href="#"><h4> {{wish.product[0].title}} </h4></a>
+                                            <h5>${{wish.product[0].price}}</h5>
+                                        </div>
                                     </div>
-                                </div>
-                             <!-- end of order box -->
-                           @endeach
-                        @else
+                                <!-- end of product card -->
+                            @endeach
+                            </div><!-- end of row of the wishlist products -->
+                           @else
                             <h3 class="text-muted text-center pt-5 pb-4">
-                                <p><i class="fas fa-truck-loading"></i></p>
-                                <p>Yooo! you have no orders yet...</p>
+                                    <p><i class="far fa-heart"></i></p>
+                                    <p>Your wishlist is empty for now !</p>
                             </h3>
-                        @endif
-                    </div>
-                    <!-- ########################## Wishlist Tab ######################### -->
-                    <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="profile-tab">
-                    @if(wishlist.length > 0)
-                        <div class="row p-2">
-                           @each(wish in wishlist)
-                            <!-- product card -->
-                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <div class="f_p_item">
-                                        <div class="f_p_img">
-                                            <img class="img-fluid" src="{{wish.product[0].images[0].image}}" alt="">
-                                            <div class="p_icon">
-                                                <a href="/product/{{wish.product[0].title}}"><i class="lnr lnr-cart"></i></a>
-                                            </div>
-                                        </div>
-                                        <a href="#"><h4> {{wish.product[0].title}} </h4></a>
-                                        <h5>${{wish.product[0].price}}</h5>
-                                    </div>
-                                </div>
-                            <!-- end of product card -->
-                           @endeach
-                        </div><!-- end of row of the wishlist products -->
-                    @else
-                       <h3 class="text-muted text-center pt-5 pb-4">
-                            <p><i class="far fa-heart"></i></p>
-                            <p>Your wishlist is empty for now !</p>
-                       </h3>
-                    @endif
+                           @endif
+                        </div>
                     </div>
                 </div>
-                </div>
+
             </div>
         </div>
     </div>

@@ -45,7 +45,6 @@ class Shop {
                         return res.render('front.shop', { data: data[0], pages, links });
                     })
                 })
-            // });
     }
 
     // Filter products
@@ -114,7 +113,7 @@ class Shop {
                                     </div>
                                 </div>
                                 <a href="/product/${product.title}"><h4>${product.title}</h4></a>
-                                <h5>${product.price}</h5>
+                                <h5>$${product.price}</h5>
                             </div>
                         </div>`
             });

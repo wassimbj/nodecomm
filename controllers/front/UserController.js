@@ -1,7 +1,17 @@
 const UserModel = require('../../database/models/User');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
-class User {
+const Controller = require('../Controller');
+
+class User extends Controller{
+
+    constructor()
+    {
+        super();
+    }
+
+    // render resgiter view
     register(req, res) {
         var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
@@ -11,6 +21,7 @@ class User {
         });
     }
 
+    // render login view
     login(req, res) {
         var msgType = req.flash('msgType'),
             msg = req.flash(msgType);
@@ -20,6 +31,7 @@ class User {
         });
     }
 
+    // Logout user
     logout(req, res)
     {
         req.session.destroy((err) => {
@@ -28,16 +40,47 @@ class User {
     }
 
     // Register user
-    async store(req, res){
+    async store(req, res)
+    {
       await UserModel.create({
           ...req.body,
           image: 'https://www.laroutedesvoyages.com/images/user-default.png'
       }, (err, result) => {
               if (!err) {
-                  req.flash('success', `Welcome ${result.firstname} ! your account was successfully created`);
-                  req.flash('msgType', 'success');
-                  req.session.userid = result.id;
-                  return res.redirect('/shop');
+                  let content = `
+                    <div style='max-width:600px;margin:0 auto;font-size:16px;line-height:24px'>
+                        <div style='text-center; display: block'> <h3> NodeComm </h3> </div>
+                        Hey ${result.firstname} ! <br>
+                        <p> Please verify your email so you can start making great deals and get our latest ! </p>
+                        <p> <img src='https://www.datavalidation.com/assets/images/15469571.validation-icon.png'> </p>
+                        <br>
+                        <a href='http://localhost:3000/auth/verify/${result.verify_token}'
+                            style='background-color: #17b978;
+                                    color: white;
+                                    padding: 1em 2rem;
+                                    display: block;
+                                    font-weight: bold;
+                                    text-decoration: none;
+                                    text-align: center;'
+                        >
+                            Verify email
+                        </a>
+                        <hr>
+                        <b> OR </b>
+                        <p> You can copy and paste this link in your browser if the link button doesn't work </p>
+                        <p> http://localhost:3000/auth/verify/${result.verify_token} </p>
+                    </div>
+                  `;
+
+                  super.sendmail(result.email, 'Email verification ! from Nodecomm', content, (resp) => {
+                    if(resp)
+                    {
+                        // req.flash('success', `Welcome ${result.firstname} ! your account was successfully created`);
+                        // req.flash('msgType', 'success');
+                        req.session.userid = result.id;
+                        return res.redirect('/shop');
+                    }
+                  });
               } else {
                   const error = Object.keys(err.errors).map(key => err.errors[key].message);
                   req.flash('danger', error)
@@ -75,6 +118,33 @@ class User {
        });
 
     }
+
+    // Verify user email
+    async verify_email(req, res)
+    {
+        // get user by token
+        await UserModel.findOne({
+            verify_token: req.params.token
+        }, {password: false}, (err, user) => {
+            console.log('findOne: ', err, user)
+            let confirmed = true;
+            if(!err && user)
+            {
+                confirmed = true;
+                let generated_token = crypto.randomBytes(12),
+                    new_verify_token = generated_token.toString('hex');
+                UserModel.findOneAndUpdate({ _id: user._id }, {
+                        verified: true,
+                        verify_token: new_verify_token
+                }).exec();
+            }else{
+                confirmed = false;
+                console.log(err)
+            }
+            return res.render('front.verify_email', { confirmed })
+        })
+    }
+
 
     // Auth function
     auth(req, res, next){

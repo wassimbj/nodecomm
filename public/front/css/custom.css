@@ -140,3 +140,21 @@ label{width: 100%}
   .profile_wrapper{display: block !important;}
   .profile_wrapper > div{width: 100% !important; margin: 2rem 0 0 0}
 }
+
+.image_edit::before {
+    content: 'Change';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 145px;
+    height: 145px;
+    font-size: 25px;
+    background: rgba(0,0,0,0.5);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transform: translateX(-50%);
+}
