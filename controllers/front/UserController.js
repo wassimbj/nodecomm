@@ -54,7 +54,7 @@ class User extends Controller{
                         <p> Please verify your email so you can start making great deals and get our latest ! </p>
                         <p> <img src='https://www.datavalidation.com/assets/images/15469571.validation-icon.png'> </p>
                         <br>
-                        <a href='http://localhost:3000/auth/verify/${result.verify_token}'
+                        <a href='https://nodecomm.herokuapp.com/auth/verify/${result.verify_token}'
                             style='background-color: #17b978;
                                     color: white;
                                     padding: 1em 2rem;
@@ -68,7 +68,7 @@ class User extends Controller{
                         <hr>
                         <b> OR </b>
                         <p> You can copy and paste this link in your browser if the link button doesn't work </p>
-                        <p> http://localhost:3000/auth/verify/${result.verify_token} </p>
+                        <p> https://nodecomm.herokuapp.com/auth/verify/${result.verify_token} </p>
                     </div>
                   `;
 
@@ -133,7 +133,7 @@ class User extends Controller{
                                     <p> Please verify your email so you can start making great deals and get our latest ! </p>
                                     <p> <img src='https://www.datavalidation.com/assets/images/15469571.validation-icon.png'> </p>
                                     <br>
-                                    <a href='http://localhost:3000/auth/verify/${user.verify_token}'
+                                    <a href='https://nodecomm.herokuapp.com/auth/verify/${user.verify_token}'
                                         style='background-color: #17b978;
                                                 color: white;
                                                 padding: 1em 2rem;
@@ -147,12 +147,12 @@ class User extends Controller{
                                     <hr>
                                     <b> OR </b>
                                     <p> You can copy and paste this link in your browser if the link button doesn't work </p>
-                                    <p> http://localhost:3000/auth/verify/${user.verify_token} </p>
+                                    <p> https://nodecomm.herokuapp.com/auth/verify/${user.verify_token} </p>
                                 </div>
                             `;
 
                         super.sendmail(user.email, 'Email verification ! from Nodecomm', content, (resp) => {
-                            console.log(resp)
+                            // console.log(resp)
                             if (resp) {
                                 req.flash('msgType', 'success');
                                 req.flash('success', 'Please check your inbox ! we have sent you the verification email')
