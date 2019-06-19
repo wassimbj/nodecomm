@@ -152,7 +152,6 @@ class User extends Controller{
                             `;
 
                         super.sendmail(user.email, 'Email verification ! from Nodecomm', content, (resp) => {
-                            // console.log(resp)
                             if (resp) {
                                 req.flash('msgType', 'success');
                                 req.flash('success', 'Please check your inbox ! we have sent you the verification email')
