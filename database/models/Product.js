@@ -17,6 +17,4 @@ const productSchema = new Schema({
     created_at: {type: Date, default: new Date()}
 });
 
-const Product = mongoose.model('Product', productSchema);
-
-module.exports = Product;
+module.exports = mongoose.model('Product', productSchema);
