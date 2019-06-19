@@ -1,9 +1,11 @@
+const Controller = require('../Controller');
 const mongoose = require('mongoose')
 const OrderModel = require('../../database/models/Order');
-var fs = require('fs');
+const fs = require('fs');
 const pdf = require('html-pdf')
+const edge = require('edge.js')
+const path = require('path')
 
-const Controller = require('../Controller');
 
 class Order extends Controller{
 
@@ -11,6 +13,7 @@ class Order extends Controller{
     {
         super();
         this.order_details = [];
+        edge.registerViews(path.join(__dirname, '../../views'))
     }
 
     // See All orders
@@ -47,20 +50,44 @@ class Order extends Controller{
     // Print invoice ( Not finished yet !!)
     printInvoice(req, res)
     {
-        // res.json('PDF')
-        // var html = fs.readFileSync('../../templates/test.html', 'utf8');
-        // var options = { format: 'Letter' };
+        // console.log(this.order_details);
+        let inv = edge.render('templates.invoice.edge', {order: this.order_details});
+        let inv_file_name = req.params.id.toString().substring(15, 19)
+        // var html = fs.readFileSync(inv, 'utf8');
+        var options = { format: 'Letter' };
 
-        // pdf.create(html, options).toFile('../../templates/test.pdf', function (err, res) {
-        //     if (err) return console.log(err);
-        //     console.log(res); // { filename: '/app/businesscard.pdf' }
-        // });
+        pdf.create(inv, options).toFile(path.join(__dirname, '../../invoices', `invoice_${inv_file_name}.pdf`),
+        (err, file) => {
+            if (err) return console.log(err);
+            // Open file in the browser
+            fs.readFile(file.filename, (err, data) => {
+               if(err)
+                    return res.redirect('back')
+               else{
+                   res.contentType("application/pdf");
+                   return res.send(data);
+               }
+            });
+        });
     }
 
     // Send invoice par email ( Not finished yet !! )
-    sendInvoice(req, res)
-    {
-        // with Nodemailer module
+    sendInvoice(req, res) {
+        let userid = req.params.userid,
+            { subject, content, user_email } = req.body;
+
+        super.sendmail(user_email, subject, content, (result) => {
+            console.log(result)
+            if (result) {
+                req.flash('msgType', 'success');
+                req.flash('success', `Your email was successfully sent to ${user_email}`)
+            } else {
+                req.flash('msgType', 'danger');
+                req.flash('danger', `Whoops ! something went wrong, please try again...`)
+            }
+            res.redirect('back')
+        })
+
     }
 
 }

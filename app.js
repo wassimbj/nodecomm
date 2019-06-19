@@ -134,7 +134,7 @@ app.use('/admin/discounts', AdminDiscounts)
 
 // 404 PAGE
 app.use((req, res) => {
-    res.status(404).render('layouts.404')
+    res.status(404).render('front.404')
 });
 
 

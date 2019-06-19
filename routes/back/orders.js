@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const AdminOrderController = require('../../controllers/back/AdminOrderController');
 
+//  Prefixed route: /admin/orders
 // Orders homepage
 router.get('/', AdminOrderController.index);
 
@@ -15,6 +16,6 @@ router.post('/status', AdminOrderController.changeStatus);
 router.get('/:id/print', AdminOrderController.printInvoice.bind(AdminOrderController))
 
 // Send invoice (Not finished yet !)
-router.get('/:id/send', AdminOrderController.sendInvoice.bind(AdminOrderController))
+router.post('/:userid/sendmail', AdminOrderController.sendInvoice.bind(AdminOrderController))
 
 module.exports = router;

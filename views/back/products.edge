@@ -36,10 +36,10 @@
                                             <img src="{{product.images[0].image}}" alt="No image found" class="img-lg">
                                         </td>
                                         <td> {{product.title}} </td>
-                                        <td class="font-weight-bold"> {{product.price}} </td>
+                                        <td class="font-weight-bold"> ${{product.price}} </td>
                                         <td class="font-weight-bold"> {{product.quantity}} </td>
                                         <td class="font-weight-bold"> {{product.category}} </td>
-                                        <td class="font-weight-bold"> {{product.original_price}} </td>
+                                        <td class="font-weight-bold"> ${{product.original_price}} </td>
                                         <td>{{product.created_at.toString().substring(0, 15)}}</td>
                                         <td>
                                             <a href='/admin/product/{{product._id}}/edit' class='btn btn-sm btn-primary'> edit </a>

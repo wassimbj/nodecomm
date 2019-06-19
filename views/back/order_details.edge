@@ -1,5 +1,8 @@
 @layout('layouts.back')
 
+    @section('css')
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css">
+    @endsection
 
 @section('admin')
     @if(order)
@@ -8,9 +11,10 @@
                 <h3 class="text-right my-5">Invoice #INV-{{order._id.toString().substring(15, 19)}}</h3>
                 <hr>
             </div>
+            
             <div class="container-fluid">
                 <div class="p-2">
-                    <p class="mt-5 mb-2 lead"><b> Invoice to:  </b></p>
+                    <p class="mt-5 mb-2 lead"> <mark> <b> Shipping to:  </b> </mark> </p>
                     <div class="text-left">
                         {{order.customer[0].firstname+' '+order.customer[0].lastname}},
                         <br>
@@ -41,6 +45,7 @@
                             .innerHTML = moment(new Date('{{order.paid_at}}')).format('YYYY-MM-DD hh:mm a');
                 </script>
             </div>
+            
             <div class="container-fluid mt-5 d-flex justify-content-center w-100">
                 <div class="table-responsive w-100">
                     <table class="table">
@@ -49,6 +54,8 @@
                                 <th>#</th>
                                 <th>Description</th>
                                 <th class="text-right">Quantity</th>
+                                <th class="text-right">Color</th>
+                                <th class="text-right">Size</th>
                                 <th class="text-right">Unit cost</th>
                                 <th class="text-right">Total</th>
                             </tr>
@@ -59,6 +66,8 @@
                                 <td class="text-left"> {{$loop.index + 1}} </td>
                                 <td class="text-left"> {{cart.product[0].title}} </td>
                                 <td>{{cart.quantity}}</td>
+                                <td>{{cart.color}}</td>
+                                <td>{{cart.size}}</td>
                                 <td>${{cart.product[0].price}}</td>
                                 <td>${{cart.total}}</td>
                             </tr>
@@ -68,20 +77,72 @@
                     </table>
                 </div>
             </div>
+            
             <div class="container-fluid mt-5 w-100">
                 <!--  <p class="text-right mb-2">Sub - Total amount: $12,348</p>
                     <p class="text-right">vat (10%) : $138</p>  -->
                     <h4 class="text-right mb-5">Total : ${{order.total}} </h4>
                     <hr>
-                <script> document.getElementById('total-shit').innerHTML = total </script>
             </div>
+            
             <div class="container-fluid w-100">
-                <a href="/admin/orders/{{order._id}}/print" class="btn btn-primary float-right mt-4 ml-2"><i class="fa fa-print mr-1"></i>Print</a>
-                <a href="#" class="btn btn-success float-right mt-4"><i class="fa fa-share mr-1"></i>Send Invoice</a>
+                <a href="/admin/orders/{{order._id}}/print" class="btn btn-primary float-right mt-4 ml-2">
+                    <i class="fa fa-print mr-1"></i>
+                    Print
+                </a>
+                <a href="#" class="btn btn-success float-right mt-4" data-toggle="modal" data-target="#send_mail_{{order._id}}">
+                    <i class="fa fa-share mr-1"></i>
+                    Send email
+                </a>
             </div>
         </div>
+        <!--  ######################## Send email modal ###################  -->
+            <div class="modal fade" id="send_mail_{{order._id}}">
+                <form method="POST" action='/admin/orders/{{order.customer[0]._id}}/sendmail'>
+                    <input type="hidden" name='user_email' value="{{order.customer[0].email}}">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                Send email to: <mark> {{order.customer[0].firstname+' '+order.customer[0].lastname}}</mark>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <label class="font-weight-bold"> What is the email subject ? </label>
+                                <input type="text" name='subject' class='form-control' placeholder="e.g: Order confirmation !">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold"> Email content </label>
+                                <textarea name="content" cols="30" rows="10" class="form-control summernote" placeholder='write your email content here...'></textarea>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary"> Send email </button>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
     @else
-        <p class="lead"> Whoops ! There is no order with this id ! </p>
+        <p class="alert alert-warning"> Whoops ! There is no order with this id ! </p>
     @endif
 
+@endsection
+
+@section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+<script>
+    $('.summernote').summernote({
+        tabsize: 2,
+        height: 200
+    });
+</script>
 @endsection

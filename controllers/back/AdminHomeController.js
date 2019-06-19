@@ -10,12 +10,12 @@ class AdminHome {
                 Order.countDocuments((err, total_orders) => {
                     User.find({
                         created_at: {
-                            $gte: new Date(new Date() - (5 * 60 * 60 * 24 * 1000))
+                            $gte: new Date(new Date() - (2 * 60 * 60 * 24 * 1000))
                         }
                     }).exec((err, new_users) => {
                         Order.find({
                             created_at: {
-                                $gte: new Date(new Date() - (5 * 60 * 60 * 24 * 1000))
+                                $gte: new Date(new Date() - (2 * 60 * 60 * 24 * 1000))
                             }
                         }).populate('customer').exec((err, new_orders) => {
                             res.render('back.dashboard', {

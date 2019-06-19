@@ -67,6 +67,7 @@
                             <th> Full name </th>
                             <th> Email </th>
                             <th> Status </th>
+                            <th> Joined on </th>
                           </tr>
                       
                     </thead>
@@ -77,12 +78,8 @@
                             <td class="py-1">
                               <img src="{{user.image}}" alt="profile" class="rounded-circle border"/>
                             </td>
-                            <td class="font-weight-bold">
-                              {{user.firstname+' '+user.lastname}}
-                            </td>
-                            <td>
-                              {{user.email}}
-                            </td>
+                            <td class="font-weight-bold"> {{user.firstname+' '+user.lastname}} </td>
+                            <td> {{user.email}} </td>
                             <td>
                               @if(user.verified)
                                 <label class="badge badge-success badge-pill"> Verified </label>
@@ -90,6 +87,7 @@
                                 <label class="badge badge-danger badge-pill"> Unverified </label>
                               @endif
                             </td>
+                            <td>{{user.created_at.toString().substr(0, 21)}}</td>
                           </tr>
                         @endeach
                     @else
