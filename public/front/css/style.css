@@ -4654,7 +4654,6 @@ h6 {
 }
 
 .cart_p_card{padding: 0.5rem 0.3rem;}
-.cart_p_card:not(:last-child){border-bottom: 1px dashed rgba(0,0,0,0.25);}
 
 .cart_box{
     background: #e8f0f2;
@@ -4675,6 +4674,12 @@ h6 {
 .text-green {color: #43cf22;}
 .box{border: 1px solid rgba(0,0,0,0.15); border-radius: 5px}
 .box > div{border-bottom: 1px solid rgba(0,0,0,0.1); padding: 1rem}
+
+@media (max-width: 994px)
+{
+    .cart_box_wrapper{padding: 0; margin-top: 3rem}
+    .cart_box_wrapper .order_box{padding: 2rem}
+}
 
 /* End Cart Area css
 ============================================================================================ */

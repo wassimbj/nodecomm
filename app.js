@@ -96,6 +96,9 @@ app.use('*', (req, res, next) => {
 
 app.get('/', HomeController.index);
 
+app.get('/contact', HomeController.contact_page)
+app.post('/contact', HomeController.send_contact)
+
 // Main shop
 app.use('/shop', mainShop)
 

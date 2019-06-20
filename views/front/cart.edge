@@ -30,13 +30,14 @@
 				<div class="d-flex justify-content-around flex-wrap cart_p_card">
 					<!-- product image -->
 					<div>
-						<span class="cart_p_img" style="background-image: url('{{cart.product[0].images[0].image}}');
-																		background-position: center !important;
-																		background-size: cover !important;
-																		background-repeat: no-repeat !important;
-																		height: 140px;width: 140px;
-																		display: block;
-																		border-radius: 5px;">
+						<span class="cart_p_img"
+						style="background-image: url('{{cart.product[0].images[0].image}}');
+								background-position: center !important;
+								background-size: cover !important;
+								background-repeat: no-repeat !important;
+								height: 140px;width: 140px;
+								display: block;
+								border-radius: 5px;">
 						</span>
 						<a href='/user/cart/{{cart._id}}/delete' class="btn btn-light text-danger rounded-circle btn-sm"
 							style='background: #f3f5f7; margin-top: -40px'>
@@ -143,7 +144,7 @@
 			</div>
 
 			{{--  Order summary and Coupons  --}}
-			<div class="col-lg-5 col-md-12 m-b-50">
+			<div class="col-lg-5 col-md-12 m-b-50 cart_box_wrapper">
 				<div class="order_box">
 					<h2>Your Order</h2>
 					<ul class="list">
