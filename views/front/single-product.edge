@@ -45,7 +45,8 @@
 					<form class="s_product_text" method='POST' action='/user/cart/add'>
 						<input type="hidden" value='{{product._id}}' name="product">
 						<h3>{{product.title}}</h3>
-						<h2>${{product.price}}</h2>
+						<h2>{{{product.price == product.original_price ? '$'+product.original_price+'' : '<del class="text-muted">$'+product.original_price+'</del> $'+product.price+' '}}}
+						</h2>
 						<ul class="list">
 							<li><a class="active" href="#"><span>Category</span> : {{product.category}}</a></li>
 							<li><a href="#"><span>Availibility</span> : {{product.quantity}}</a></li>

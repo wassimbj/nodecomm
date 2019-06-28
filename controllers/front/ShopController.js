@@ -48,7 +48,7 @@ class Shop {
     }
 
     // Filter products
-    filter(req, res)
+    async filter(req, res)
     {
         // console.log('Skip = ', this.skip)
         var options = { $match: {} },
@@ -87,21 +87,30 @@ class Shop {
         // res.json(req.body)
         // console.log(sort)
         const user_id = req.session.userid;
-       Product.aggregate([
-            options,
-            sort,
-            {
-                $lookup: {
-                    from: 'productimages',
-                    localField: '_id',
-                    foreignField: 'img_to',
-                    as: 'images'
-                }
-            },
-            {$skip: this.skip},
-            {$limit: this.perpage}
+       await Product.aggregate([
+                options,
+                sort,
+                {
+                    $lookup: {
+                        from: 'productimages',
+                        localField: '_id',
+                        foreignField: 'img_to',
+                        as: 'images'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'discounts',
+                        localField: 'discount',
+                        foreignField: '_id',
+                        as: 'discount'
+                    }
+
+                },
+                {$skip: this.skip},
+                {$limit: this.perpage}
         ]).exec((err, products) => {
-            // console.log(options)
+            // console.log(products)
             var output = '';
             products.map(product => {
                 output += `<div class="col-lg-4 col-md-4 col-sm-6">
@@ -113,7 +122,9 @@ class Shop {
                                     </div>
                                 </div>
                                 <a href="/product/${product.title}"><h4>${product.title}</h4></a>
-                                <h5>$${product.price}</h5>
+                                <h5>
+                                   ${product.price == product.original_price ? `$${product.original_price}` : `<del>$${product.original_price}</del> $${product.price}`}
+                                </h5>
                             </div>
                         </div>`
             });
@@ -124,51 +135,63 @@ class Shop {
     }
 
     // Single product
-    single(req, res){
-        Product.aggregate([
-            { $match: { 'title': req.params.name } },
-            {
-                $lookup: {
-                    from: 'productimages',
-                    localField: '_id',
-                    foreignField: 'img_to',
-                    as: 'images'
-                }
-                
-            },
-            {
-                $lookup: {
-                    from: 'wishlists',
-                    localField: '_id',
-                    foreignField: 'product',
-                    as: 'wishlist'
-                }
-            },
-            {
-                $project:
+    async single(req, res){
+        await Product.aggregate([
+                { $match: { 'title': req.params.name } },
                 {
-                    colors: 1,
-                    sizes: 1,
-                    created_at: 1,
-                    title: 1,
-                    price: 1,
-                    quantity: 1,
-                    category: 1,
-                    brand: 1,
-                    description: 1,
-                    specifications: 1,
-                    images: '$images',
-                    wishlist:
+                    $lookup: {
+                        from: 'productimages',
+                        localField: '_id',
+                        foreignField: 'img_to',
+                        as: 'images'
+                    }
+                    
+                },
+                {
+                    $lookup: {
+                        from: 'discounts',
+                        localField: 'discount',
+                        foreignField: '_id',
+                        as: 'discount'
+                    }
+                    
+                },
+                {
+                    $lookup: {
+                        from: 'wishlists',
+                        localField: '_id',
+                        foreignField: 'product',
+                        as: 'wishlist'
+                    }
+                },
+                {
+                    $project:
                     {
-                        $filter: {
-                            input: '$wishlist',
-                            as: 'wish',
-                            cond: { $eq: ['$$wish.author', mongoose.Types.ObjectId(req.session.userid)] }
-                        }
+                        colors: 1,
+                        sizes: 1,
+                        created_at: 1,
+                        title: 1,
+                        price: 1,
+                        original_price: 1,
+                        quantity: 1,
+                        category: 1,
+                        brand: 1,
+                        description: 1,
+                        specifications: 1,
+                        images: '$images',
+                        wishlist:
+                        {
+                            $filter: {
+                                input: '$wishlist',
+                                as: 'wish',
+                                cond: { $eq: ['$$wish.author', mongoose.Types.ObjectId(req.session.userid)] }
+                            }
+                        },
+                        discount: '$discount'
                     }
                 }
-            }
         ]).exec((err, resp) => {
+            // console.log(resp);
             const msgType = req.flash('msgType'),
                 msg = req.flash(msgType)
                 // console.log(resp)
