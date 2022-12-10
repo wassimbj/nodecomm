@@ -21,7 +21,7 @@
     "connect-mongo": "^2.0.3",
     "dotenv": "^8.0.0",
     "edge.js": "^1.1.4",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-edge": "^1.0.0",
     "express-session": "^1.16.1",
     "html-pdf": "^2.2.0",
